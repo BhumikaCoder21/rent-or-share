@@ -17,7 +17,7 @@ export default function ScootyAnimation() {
             playsInline
             className="w-full h-full object-cover"
           >
-            <source src="/scooty-ride.mp4" type="video/mp4" />
+            <source src="/login.mp4" type="video/mp4" />
            
             <div className="w-full h-full bg-gray-800 flex items-center justify-center text-white">
               Video Loading...
