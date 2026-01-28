@@ -13,6 +13,21 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      // tailwind.config.ts
+      theme: {
+        extend: {
+          // ... other extensions
+          keyframes: {
+            scan: {
+              "0%, 100%": { top: "10%" },
+              "50%": { top: "90%" },
+            },
+          },
+          animation: {
+            scan: "scan 2s ease-in-out infinite",
+          },
+        },
+      },
     },
   },
   plugins: [],
