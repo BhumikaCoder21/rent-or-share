@@ -5,7 +5,7 @@ type Props = {
   description: string;
   buttonText: string;
   type: "ride" | "scooty";
-  onClick?: () => void; // Added this prop
+  onClick?: () => void; 
 };
 
 export default function ActionCard({
@@ -22,7 +22,7 @@ export default function ActionCard({
       </div>
 
       <button
-        onClick={onClick} // Connected to the prop
+        onClick={onClick} 
         className="mt-6 px-6 py-3 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition font-medium"
       >
         {buttonText}
