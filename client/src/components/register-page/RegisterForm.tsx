@@ -1,125 +1,130 @@
 "use client";
-import React, { FormEvent } from "react";
+import React, { FormEvent,useState } from "react";
 import { User, Mail, Lock, Phone, CreditCard } from "lucide-react"; 
+import UserProfileCard from "@/components/main-page/UserProfileCard";
 
 export default function RegisterForm() {
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Registration submitted");
+  const [formData, setFormData] = useState({
+    name: "",
+    rollNo: "",
+    phone: "",
+    email: "",
+    password: "",
+  });
+
+  const [showProfile, setShowProfile] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-5 mt-6">
-     
-      <div className="space-y-2">
-        <label
-          htmlFor="name"
-          className="text-sm font-medium text-gray-700 block"
-        >
-          Full Name
-        </label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <User className="h-5 w-5 text-gray-400 group-focus-within:text-violet-600 transition-colors" />
-          </div>
-          <input
-            id="name"
-            type="text"
-            placeholder="John Doe"
-            className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
-          />
-        </div>
-      </div>
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setShowProfile(true);
+  };
 
-     
-      <div className="space-y-2">
-        <label
-          htmlFor="rollNo"
-          className="text-sm font-medium text-gray-700 block"
-        >
-          College Roll No.
-        </label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <CreditCard className="h-5 w-5 text-gray-400 group-focus-within:text-violet-600 transition-colors" />
-          </div>
-          <input
-            id="rollNo"
-            type="text"
-            placeholder="22CSE045"
-            className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all uppercase"
-          />
-        </div>
-      </div>
+ return (
+   <div className="flex flex-col lg:flex-row gap-10 items-start">
+     <form onSubmit={handleSubmit} className="space-y-5 mt-6 w-full max-w-xl">
+       <div className="space-y-2">
+         <label className="text-sm font-medium text-gray-700 block">
+           Full Name
+         </label>
+         <div className="relative">
+           <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+           <input
+             id="name"
+             placeholder="John Doe"
+             value={formData.name}
+             onChange={handleChange}
+             className="w-full pl-10 py-3 rounded-xl bg-violet-50 border"
+           />
+         </div>
+       </div>
 
-      
-      <div className="space-y-2">
-        <label
-          htmlFor="phone"
-          className="text-sm font-medium text-gray-700 block"
-        >
-          Phone Number
-        </label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Phone className="h-5 w-5 text-gray-400 group-focus-within:text-violet-600 transition-colors" />
-          </div>
-          <input
-            id="phone"
-            type="tel"
-            placeholder="98765 43210"
-            className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
-          />
-        </div>
-      </div>
+       <div className="space-y-2">
+         <label className="text-sm font-medium text-gray-700 block">
+           College Roll No.
+         </label>
+         <div className="relative">
+           <CreditCard className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+           <input
+             id="rollNo"
+             placeholder="22CSE045"
+             value={formData.rollNo}
+             onChange={handleChange}
+             className="w-full pl-10 py-3 rounded-xl bg-violet-50 border uppercase"
+           />
+         </div>
+       </div>
 
-      <div className="space-y-2">
-        <label
-          htmlFor="email"
-          className="text-sm font-medium text-gray-700 block"
-        >
-          College Email ID
-        </label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-violet-600 transition-colors" />
-          </div>
-          <input
-            id="email"
-            type="email"
-            placeholder="student@college.edu"
-            className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
-          />
-        </div>
-      </div>
+       <div className="space-y-2">
+         <label className="text-sm font-medium text-gray-700 block">
+           Phone Number
+         </label>
+         <div className="relative">
+           <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+           <input
+             id="phone"
+             placeholder="98765 43210"
+             value={formData.phone}
+             onChange={handleChange}
+             className="w-full pl-10 py-3 rounded-xl bg-violet-50 border"
+           />
+         </div>
+       </div>
 
-   
-      <div className="space-y-2">
-        <label
-          htmlFor="password"
-          className="text-sm font-medium text-gray-700 block"
-        >
-          Create Password
-        </label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-violet-600 transition-colors" />
-          </div>
-          <input
-            id="password"
-            type="password"
-            placeholder="••••••••"
-            className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
-          />
-        </div>
-      </div>
+       <div className="space-y-2">
+         <label className="text-sm font-medium text-gray-700 block">
+           College Email ID
+         </label>
+         <div className="relative">
+           <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+           <input
+             id="email"
+             placeholder="student@college.edu"
+             value={formData.email}
+             onChange={handleChange}
+             className="w-full pl-10 py-3 rounded-xl bg-violet-50 border"
+           />
+         </div>
+       </div>
 
-      <button
-        type="submit"
-        className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-violet-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 mt-2"
-      >
-        Create Account
-      </button>
-    </form>
-  );
+       <div className="space-y-2">
+         <label className="text-sm font-medium text-gray-700 block">
+           Create Password
+         </label>
+         <div className="relative">
+           <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+           <input
+             id="password"
+             type="password"
+             placeholder="••••••••"
+             value={formData.password}
+             onChange={handleChange}
+             className="w-full pl-10 py-3 rounded-xl bg-violet-50 border"
+           />
+         </div>
+       </div>
+
+       <button
+         type="submit"
+         className="w-full bg-violet-600 text-white py-3 rounded-xl font-semibold"
+       >
+         Create Account
+       </button>
+     </form>
+
+     {showProfile && (
+       <div className="w-full max-w-sm">
+         <UserProfileCard
+           name={formData.name}
+           rollNo={formData.rollNo}
+           phone={formData.phone}
+           email={formData.email}
+         />
+       </div>
+     )}
+   </div>
+ );
 }
