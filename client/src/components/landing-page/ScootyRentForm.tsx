@@ -1,7 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { Bike, IndianRupee, Clock, MapPin, Phone, User, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import {
+  Bike,
+  IndianRupee,
+  Clock,
+  MapPin,
+  Phone,
+  User,
+  Calendar,
+  X,
+} from "lucide-react";
+import CalendarPopup from "@/components/ui/CalendarPopup";
 
 interface ScootyRentFormProps {
   onClose?: () => void;
@@ -18,6 +28,8 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
     contact: "",
     location: "",
     pricePerHour: "",
+    startDate: null as Date | null,
+    endDate: null as Date | null,
     availableFrom: "09:00 AM",
     availableTill: "06:00 PM",
     helmetIncluded: true,
@@ -25,11 +37,39 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
     notes: "",
   });
 
+  const [openCalendar, setOpenCalendar] = useState<"start" | "end" | null>(
+    null,
+  );
+
+  const calendarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(e.target as Node)
+      ) {
+        setOpenCalendar(null);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Scooty Rent Data:", formData);
     onClose?.();
   };
+
+  const formatDate = (d: Date | null) =>
+    d
+      ? d.toLocaleDateString("en-GB", {
+          weekday: "short",
+          day: "numeric",
+          month: "long",
+        })
+      : "Select date";
 
   const TimePicker = ({
     label,
@@ -87,7 +127,7 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
 
   return (
     <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl flex flex-col max-h-[90vh]">
-   
+  
       <div className="bg-[#00AFF5] px-6 py-5 flex justify-between items-start shrink-0">
         <div>
           <h2 className="text-2xl font-bold text-white">Give Scooty on Rent</h2>
@@ -105,9 +145,10 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
         )}
       </div>
 
+
       <div className="flex-1 overflow-y-auto p-6">
         <form onSubmit={handleSubmit} className="space-y-8">
-          
+   
           <div className="space-y-4">
             <h3 className="font-semibold text-lg flex items-center gap-2">
               <User className="text-[#00AFF5]" /> Owner Details
@@ -137,9 +178,8 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
             </div>
           </div>
 
-          <hr className="border-gray-100" />
+          <hr />
 
-       
           <div className="space-y-4">
             <h3 className="font-semibold text-lg flex items-center gap-2">
               <Bike className="text-[#00AFF5]" /> Scooty Details
@@ -176,13 +216,67 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
             </div>
           </div>
 
-          <hr className="border-gray-100" />
+          <hr />
 
-          
           <div className="space-y-4">
             <h3 className="font-semibold text-lg flex items-center gap-2">
               <Clock className="text-[#00AFF5]" /> Availability
             </h3>
+
+            <div ref={calendarRef} className="grid md:grid-cols-2 gap-6">
+              <div className="relative">
+                <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">
+                  From Date
+                </label>
+                <div
+                  onClick={() => setOpenCalendar("start")}
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl flex items-center gap-3 cursor-pointer"
+                >
+                  <Calendar className="text-gray-400" />
+                  {formatDate(formData.startDate)}
+                </div>
+
+                {openCalendar === "start" && (
+                  <CalendarPopup
+                    selectedDate={formData.startDate}
+                    onSelect={(d) => {
+                      setFormData({
+                        ...formData,
+                        startDate: d,
+                        endDate:
+                          formData.endDate && d && d > formData.endDate
+                            ? null
+                            : formData.endDate,
+                      });
+                      setOpenCalendar(null);
+                    }}
+                  />
+                )}
+              </div>
+
+              <div className="relative">
+                <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">
+                  To Date
+                </label>
+                <div
+                  onClick={() => setOpenCalendar("end")}
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl flex items-center gap-3 cursor-pointer"
+                >
+                  <Calendar className="text-gray-400" />
+                  {formatDate(formData.endDate)}
+                </div>
+
+                {openCalendar === "end" && (
+                  <CalendarPopup
+                    selectedDate={formData.endDate}
+                    onSelect={(d) => {
+                      setFormData({ ...formData, endDate: d });
+                      setOpenCalendar(null);
+                    }}
+                  />
+                )}
+              </div>
+            </div>
 
             <div className="grid md:grid-cols-2 gap-6">
               <TimePicker
@@ -198,52 +292,6 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
             </div>
           </div>
 
-          <hr className="border-gray-100" />
-
-          <div className="space-y-3">
-            <h3 className="font-semibold text-lg">Extras</h3>
-
-            <label className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                checked={formData.helmetIncluded}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    helmetIncluded: e.target.checked,
-                  })
-                }
-              />
-              Helmet Included
-            </label>
-
-            <label className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                checked={formData.fuelIncluded}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    fuelIncluded: e.target.checked,
-                  })
-                }
-              />
-              Fuel Included
-            </label>
-          </div>
-
-        
-          <textarea
-            placeholder="Any rules or notes (optional)"
-            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl resize-none"
-            rows={3}
-            value={formData.notes}
-            onChange={(e) =>
-              setFormData({ ...formData, notes: e.target.value })
-            }
-          />
-
-          
           <button
             type="submit"
             className="w-full bg-[#00AFF5] hover:bg-[#0099d6] text-white font-bold text-lg py-4 rounded-xl"
