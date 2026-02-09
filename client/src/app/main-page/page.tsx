@@ -37,6 +37,7 @@ export default function UserCard() {
           ))}
         </div>
       </section>
+      <Navbar/>
     </main>
   );
 }
