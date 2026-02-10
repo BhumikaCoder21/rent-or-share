@@ -2,7 +2,7 @@ import Navbar from "./Navbar";
 import Hero from "./Hero";
 import SearchBar from "./SearchBar";
 import ActionCards from "./ActionCards";
-
+import Footer from "./Footer";
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
@@ -10,6 +10,7 @@ export default function LandingPage() {
       <Hero />
       <SearchBar/>
       <ActionCards />
+      <Footer/>
     </main>
   );
 }
