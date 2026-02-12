@@ -4,10 +4,11 @@ import SearchBar from "@/components/landing-page/SearchBar";
 import ActionCards from "@/components/landing-page/ActionCards";
 
 import RideCard from "@/components/main-page/RideCard";
-import { rideCards } from "@/components/main-page/card-data";
+import { rideCards } from "@/components/main-page/ride-card-data";
 
 import ScootyRentCard from "@/components/main-page/ScootyRentCard";
 import { scootyRentData } from "@/components/main-page/scooty-rent-data";
+import Footer from "@/components/landing-page/Footer";
 
 export default function UserCard() {
   return (
@@ -27,7 +28,6 @@ export default function UserCard() {
         </div>
       </section>
 
-      
       <section className="px-6 md:px-12 py-10">
         <h2 className="text-2xl font-bold mb-6">Scooties Available for Rent</h2>
 
@@ -37,7 +37,7 @@ export default function UserCard() {
           ))}
         </div>
       </section>
-      <Navbar/>
+      <Footer />
     </main>
   );
 }

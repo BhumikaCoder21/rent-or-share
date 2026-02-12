@@ -1,16 +1,6 @@
-export type RideCard = {
-  id: string;
-  from: string;
-  to: string;
-  date: string;
-  time: string;
-  vehicleType: "car" | "scooty";
-  seats: number;
-  price: number;
-  phone: string; 
-};
+import { Ride } from "@/types/ride.types";
 
-export const rideCards: RideCard[] = [
+export const rideCards: Ride[] = [
   {
     id: "1",
     from: "NIT Arunachal Pradesh",
