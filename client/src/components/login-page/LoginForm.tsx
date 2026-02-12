@@ -1,14 +1,20 @@
 "use client";
-import React, { FormEvent } from "react";
-import { User, Mail, Lock} from "lucide-react";
+
+import React, { FormEvent, useState } from "react";
+import { User, Mail, Lock } from "lucide-react";
+import { LoginRequest } from "@/types/auth.types";
 
 export default function LoginForm() {
+  const [formData, setFormData] = useState<LoginRequest>({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-   
-    console.log("Form submitted");
- };
+    console.log("Form submitted:", formData);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mt-6">
@@ -26,6 +32,9 @@ export default function LoginForm() {
           <input
             id="name"
             type="text"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="John Doe"
             className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
           />
@@ -46,6 +55,11 @@ export default function LoginForm() {
           <input
             id="email"
             type="email"
+            required
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             placeholder="student@college.edu"
             className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
           />
@@ -66,6 +80,11 @@ export default function LoginForm() {
           <input
             id="password"
             type="password"
+            required
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
             placeholder="••••••••"
             className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
           />

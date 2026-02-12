@@ -29,7 +29,9 @@ export default function ShareRideForm({ onClose }: ShareRideFormProps) {
     seats: 1,
     price: "",
     vehicleType: "scooty",
+    phone: "",
   });
+
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -56,7 +58,6 @@ export default function ShareRideForm({ onClose }: ShareRideFormProps) {
 
   return (
     <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl flex flex-col max-h-[90vh]">
-      
       <div className="bg-[#00AFF5] px-8 py-6 flex justify-between items-start shrink-0">
         <div>
           <h2 className="text-2xl md:text-3xl font-bold text-white">
@@ -74,10 +75,8 @@ export default function ShareRideForm({ onClose }: ShareRideFormProps) {
         </button>
       </div>
 
- 
       <div className="flex-1 overflow-y-auto p-8">
         <form onSubmit={handleSubmit} className="space-y-8">
-          
           <div className="space-y-4">
             <h3 className="flex items-center gap-2 font-semibold text-lg">
               <MapPin className="text-[#00AFF5]" /> Route Details
@@ -107,7 +106,6 @@ export default function ShareRideForm({ onClose }: ShareRideFormProps) {
 
           <hr className="border-gray-100" />
 
-      
           <div className="space-y-4">
             <h3 className="flex items-center gap-2 font-semibold text-lg">
               <Clock className="text-[#00AFF5]" /> Date & Time
@@ -158,7 +156,6 @@ export default function ShareRideForm({ onClose }: ShareRideFormProps) {
             </h3>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-         
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase">
                   Vehicle
@@ -195,7 +192,6 @@ export default function ShareRideForm({ onClose }: ShareRideFormProps) {
                 </div>
               </div>
 
-          
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase">
                   Seats
@@ -229,7 +225,6 @@ export default function ShareRideForm({ onClose }: ShareRideFormProps) {
                 </div>
               </div>
 
-            
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase">
                   Price
@@ -248,10 +243,25 @@ export default function ShareRideForm({ onClose }: ShareRideFormProps) {
                   />
                 </div>
               </div>
+
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase">
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  required
+                  placeholder="Enter phone number"
+                  className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#00AFF5]"
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                />
+              </div>
             </div>
           </div>
 
-        
           <button
             type="submit"
             className="w-full bg-[#00AFF5] hover:bg-[#0099d6] text-white font-bold text-xl py-4 rounded-xl"
