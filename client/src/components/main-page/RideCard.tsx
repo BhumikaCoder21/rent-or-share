@@ -14,12 +14,11 @@ import {
   MessageCircle,
 } from "lucide-react";
 
-import { Ride } from "@/types/ride.types";
+import { RideCard as RideCardType } from "./card-data";
 
 interface RideCardProps {
-  ride: Ride;
+  ride: RideCardType;
 }
-
 
 export default function RideCard({ ride }: RideCardProps) {
   const [showContact, setShowContact] = useState(false);
@@ -30,6 +29,7 @@ export default function RideCard({ ride }: RideCardProps) {
 
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 flex flex-col gap-4">
+  
       <div className="flex items-start gap-3">
         <MapPin className="text-[#00AFF5] mt-1" />
         <div>

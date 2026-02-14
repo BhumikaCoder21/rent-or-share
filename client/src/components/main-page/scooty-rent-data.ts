@@ -1,8 +1,19 @@
-import { ScootyRent } from "@/types/rent.types";
+export interface ScootyRent {
+  ownerName: string;
+  contact: string;
+  location: string;
+  startDate: Date | string;
+  endDate: Date | string;
+  availableFrom: string;
+  availableTill: string;
+  pricePerHour: number;
+  helmetIncluded: boolean;
+  fuelIncluded: boolean;
+  notes?: string;
+}
 
 export const scootyRentData: ScootyRent[] = [
   {
-    id: "1",
     ownerName: "Amit Sharma",
     contact: "8368452516",
     location: "Main Gate, ABC College",
