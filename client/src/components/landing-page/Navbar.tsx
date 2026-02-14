@@ -6,7 +6,7 @@ import { User } from "lucide-react";
 import UserProfileCard from "@/components/main-page/UserProfileCard";
 
 export default function Navbar() {
-  const isLoggedIn = true;
+  const isLoggedIn = false;
   const [showProfile, setShowProfile] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
