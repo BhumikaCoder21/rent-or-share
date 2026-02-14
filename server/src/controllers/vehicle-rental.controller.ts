@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { registerVehicleService, getAllVehiclesService, getRentByIdService, updateVehicleRentService, deleteVehicleService } from "../services/rent.services";
+import { registerVehicleService, getAllVehiclesService, getVehicleByIdService, updateVehicleService, deleteVehicleService } from "../services/vehicle-rental.services";
 
 export const registerVehicle = async (req: Request, res: Response) => {
   try {
@@ -37,7 +37,7 @@ export const getVehicleById = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "Invalid ID" });
    }
 
-    const vehicle = await getRentByIdService(id);
+    const vehicle = await getVehicleByIdService(id);
 
     res.status(200).json({
       message: "Vehicle fetched successfully",
@@ -57,7 +57,7 @@ export const updateVehicleRent = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "Invalid ID" });
    }
 
-    const updatedVehicle = await updateVehicleRentService(id, updateData);
+    const updatedVehicle = await updateVehicleService(id, updateData);
 
     res.status(200).json({
       message: "Vehicle updated successfully",
