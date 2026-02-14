@@ -20,5 +20,21 @@ export const UserProfile = async (data: AuthUserData) => {
   return user;
 };
 
+export const AllUsersProfile = async (data : any) => {
+
+};
+
+export const GetUserProfileById = async (data : any) => {
+
+};
+
+export const DeleteAllUsersProfile = async (data : any) => {
+
+};
+
+export const DeleteUserProfileById = async (data : any) => {
+
+};
+
 
 
