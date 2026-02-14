@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { error } from "node:console";
 
-import { UserProfile, AllUsersProfile, GetUserProfileById, DeleteAllUsersProfile, DeleteUserProfileById } from "../services/user.service";
+import { UserProfile, AllUsersProfile, GetUserProfileById, DeleteAllUsersProfile, DeleteUserProfileById } from "../services/user.services";
 
 export const profile = async (req: Request, res: Response) => {
   try {
