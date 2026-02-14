@@ -21,3 +21,32 @@ export const profile = async (req: Request, res: Response) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+
+export const getAllProfiles = async (req: Request, res: Response) => {
+  try {
+  }
+ catch (error: any) {
+  }
+};
+
+export const getProfileById = async (req: Request, res: Response) => {
+  try {
+  }
+ catch (error: any) {
+  }
+};
+
+export const deleteAllProfiles = async (req: Request, res: Response) => {
+  try {
+  }
+ catch (error: any) {
+  }
+};
+
+export const deleteProfileById = async (req: Request, res: Response) => {
+  try {
+  }
+ catch (error: any) {
+  }
+};
