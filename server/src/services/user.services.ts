@@ -6,8 +6,8 @@ interface AuthUserData {
   role: "OWNER" | "CUSTOMER" | "BOTH";
 }
 
-export const UserProfile = async (data: AuthUserData) => {
-  const { id, email, role } = data;
+export const getProfileByIdService = async (data: AuthUserData) => {
+  const { id } = data;
 
   const user = await User.findById(id).select(
     "_id name rollNumber phoneNumber email role"
@@ -20,21 +20,57 @@ export const UserProfile = async (data: AuthUserData) => {
   return user;
 };
 
-export const AllUsersProfile = async (data : any) => {
+export const getAllProfilesService = async () => {
+  const users = await User.find().select(
+    "_id name rollNumber phoneNumber email role"
+  );
 
-};
+  if (!users || users.length === 0) {
+    throw new Error("No users found");
+  }
 
-export const GetUserProfileById = async (data : any) => {
-
-};
-
-export const DeleteAllUsersProfile = async (data : any) => {
-
-};
-
-export const DeleteUserProfileById = async (data : any) => {
-
+  return users;
 };
 
 
+export const deleteAllProfilesService = async () => {
+  const result = await User.deleteMany({});
 
+  if (result.deletedCount === 0) {
+    throw new Error("No users found to delete");
+  }
+
+  return result;
+};
+
+export const deleteProfileByIdService = async (id: string) => {
+  const deletedUser = await User.findByIdAndDelete(id);
+
+  if (!deletedUser) {
+    throw new Error("User not found");
+  }
+
+  return deletedUser;
+};
+
+export const updateProfileByIdService = async (
+  id: string,
+  updateData: {
+    name?: string;
+    rollNumber?: string;
+    phoneNumber?: string;
+    email?: string;
+  }
+) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { $set: updateData },
+    { new: true, runValidators: true }
+  ).select("_id name rollNumber phoneNumber email role");
+
+  if (!updatedUser) {
+    throw new Error("User not found");
+  }
+
+  return updatedUser;
+};

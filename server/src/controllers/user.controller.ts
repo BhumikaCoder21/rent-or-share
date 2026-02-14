@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
+
+import { getProfileByIdService, getAllProfilesService, deleteAllProfilesService, deleteProfileByIdService, updateProfileByIdService } from "../services/user.services";
 import { error } from "node:console";
 
-import { UserProfile, AllUsersProfile, GetUserProfileById, DeleteAllUsersProfile, DeleteUserProfileById } from "../services/user.services";
-
-export const profile = async (req: Request, res: Response) => {
+export const getProfileById = async (req: Request, res: Response) => {
   try {
-  const user = await UserProfile(req.body);
+  const user = await getProfileByIdService(req.body);
 
   res.status(200).json({
   message: "User Profile Successfully Fetched",
@@ -20,7 +20,7 @@ export const profile = async (req: Request, res: Response) => {
 
 export const getAllProfiles = async (req: Request, res: Response) => {
   try {
-    const usersProfile = await AllUsersProfile(req.body);
+    const usersProfile = await getAllProfilesService();
 
     res.status(200).json({
     message: "Users Profile Successfully Fetched",
@@ -33,24 +33,10 @@ export const getAllProfiles = async (req: Request, res: Response) => {
   }
 };
 
-export const getProfileById = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params
-    const user = await GetUserProfileById(id);
-
-    res.status(200).json({
-      message: "user Profile Successfully Fetched",
-      user
-    })
-  }
- catch (error: any) {
-   res.status(400).json({ message: error.message });
-  }
-};
 
 export const deleteAllProfiles = async (req: Request, res: Response) => {
   try {
-     await DeleteAllUsersProfile(req.body);
+     await deleteAllProfilesService();
 
     res.status(200).json({
       message: "All User Profiles Successfully Deleted"
@@ -65,12 +51,36 @@ export const deleteAllProfiles = async (req: Request, res: Response) => {
 export const deleteProfileById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    await DeleteUserProfileById(id);
+
+    if(!id || Array.isArray(id)) return error("Invalid Id");
+    await deleteProfileByIdService(id);
 
     res.status(200).json({
       message: "User Profile Successfully Deleted"
     });
   } catch (error) {
     res.status(500).json({ message: "Failed to delete user profile" });
+  }
+};
+
+export const updateProfileById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if(!id || Array.isArray(id)) return error("Invalid Id");
+    const { name, rollNumber, phoneNumber, email } = req.body;
+
+    const updatedUser = await updateProfileByIdService(id, {
+      name,
+      rollNumber,
+      phoneNumber,
+      email,
+    });
+
+    res.status(200).json({
+      message: "User Profile Successfully Updated",
+      user: updatedUser,
+    });
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
   }
 };
