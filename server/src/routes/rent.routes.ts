@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../middlewares/auth.middleware";
-import { createRent, getAllRents, getRentById, updateRent, deleteRent } from "../controllers/rent.controller";
+import { createRent, getAllRents, getRentById, updateRent, deleteRent } from "../controllers/vehicle-rental.controller";
 
 const router = Router();
 
