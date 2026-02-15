@@ -1,17 +1,17 @@
 import { Router } from "express";
 import { authMiddleware } from "../middlewares/auth.middleware";
-import { createRent, getAllRents, getRentById, updateRent, deleteRent } from "../controllers/vehicle-rental.controller";
+import { registerVehicle, getAllVehicles, getVehicleById ,updateVehicleRent,  deleteVehicle} from "../controllers/vehicle-rental.controller";
 
 const router = Router();
 
-router.post("/", authMiddleware, createRent);
+router.post("/", authMiddleware, registerVehicle);
 
-router.get("/", getAllRents);
+router.get("/", getAllVehicles);
 
-router.get("/:id", getRentById);
+router.get("/:id", getVehicleById);
 
-router.patch("/:id", authMiddleware, updateRent);
+router.patch("/:id", authMiddleware, updateVehicleRent);
 
-router.delete("/:id", authMiddleware, deleteRent);
+router.delete("/:id", authMiddleware, deleteVehicle);
 
 export default router;
