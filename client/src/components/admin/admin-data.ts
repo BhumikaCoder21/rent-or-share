@@ -68,3 +68,20 @@ export const rentals = [
     owner: "Anjali Verma",
   },
 ];
+
+export const vehicles = [
+  {
+    _id: "1",
+    title: "Honda Activa",
+    location: "Campus",
+    price: 400,
+    owner: "Rahul Sharma",
+  },
+  {
+    _id: "2",
+    title: "Yamaha FZ",
+    location: "Nirjuli",
+    price: 600,
+    owner: "Anjali Verma",
+  },
+];
