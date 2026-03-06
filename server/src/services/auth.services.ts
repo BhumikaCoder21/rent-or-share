@@ -25,10 +25,13 @@ export const registerUser = async (data: any) => {
 };
 
 export const loginUser = async (email: string, password: string) => {
+  console.log("I am in the login services")
   const user = await User.findOne({ email });
   if (!user) {
     throw new Error("Invalid credentials");
   }
+
+  console.log("user presents")
   if(user.password==null) throw new Error("Password not found")
 
   const isMatch = await bcrypt.compare(password, user.password);
@@ -45,6 +48,8 @@ export const loginUser = async (email: string, password: string) => {
     process.env.JWT_SECRET as string,
     { expiresIn: "7d" }
   );
+
+  console.log("the token is ", token)
 
   return token;
 };

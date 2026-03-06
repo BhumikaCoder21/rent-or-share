@@ -36,10 +36,11 @@ export default function LoginForm() {
  const onSubmit = async (data: LoginRequest) => {
      try {
  
-       await login(data);
+      const res =  await login(data);
+      localStorage.setItem("token", res.token)
        alert("Login successful 🎉");
  
-       router.push("/");
+       router.push("/landing-page");
      } catch (error) {
        console.error(error);
        alert("Login failed");
@@ -119,11 +120,16 @@ export default function LoginForm() {
           )}
         />
 
-        <Button
+         <Button
           type="submit"
-          className="w-full"
+          disabled={loginLoading}
+          className="w-full bg-violet-600 hover:bg-violet-700 flex items-center justify-center gap-2"
         >
-          Verify & Login
+          {loginLoading ? (
+            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            "Login and Verify"
+          )}
         </Button>
       </form>
     </Form>
