@@ -4,6 +4,6 @@ import { adminDashboard } from "../controllers/admin.controller";
 
 const router = Router();
 
-router.get("/stats", authMiddleware, adminDashboard );
+router.get("/stats", authMiddleware, adminDashboard);
 
 export default router;

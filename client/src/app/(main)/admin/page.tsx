@@ -5,6 +5,7 @@ import { useAdminDashboard } from "@/hooks/useAdminDashboard"
 
 export default function AdminDashboard() {
   const {data, isLoading, error} = useAdminDashboard()
+  if(error) return <h1>Bhumika is bhoot, chudail</h1>
   if(error) return null;
   return (isLoading)?  <div>Loading....</div> : 
   (
@@ -20,3 +21,5 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+
