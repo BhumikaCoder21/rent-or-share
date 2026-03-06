@@ -1,7 +1,8 @@
 type Props = {
-  totalUsers: number;
-  totalRides: number;
-  totalRentals: number;
+  totalUsers: number,
+  totalRides: number,
+  totalRentals: number,
+  totalVehicles: number
 };
 
 function Card({ title, value }: { title: string; value: number }) {
@@ -17,12 +18,14 @@ export default function DashboardCards({
   totalUsers,
   totalRides,
   totalRentals,
+  totalVehicles
 }: Props) {
   return (
     <div className="grid grid-cols-3 gap-6">
       <Card title="Total Users" value={totalUsers} />
       <Card title="Total Rides" value={totalRides} />
-      <Card title="Total Rentals" value={totalRentals} />
+      <Card title="Total Rentals Available" value={totalRentals} />
+       <Card title="Total Vehicles Registered" value={totalVehicles} />
     </div>
   );
 }
