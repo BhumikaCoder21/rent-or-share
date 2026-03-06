@@ -6,8 +6,8 @@ export interface LoginRequest {
 
 export interface RegisterRequest {
   name: string;
-  rollNo: string;
-  phone: string;
+  rollNumber: string;
+  phoneNumber: string;
   email: string;
   password: string;
 }
