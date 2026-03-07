@@ -23,7 +23,7 @@ export const authMiddleware = (
       process.env.JWT_SECRET as string,
     ) as JwtPayload;
     // console.log("Decoded JWT payload:", decoded);
-    req.body = decoded; 
+   (req as any).user = decoded;
     // console.log("Auth middleware passed, moving to next handler");
     next();
   } catch {
