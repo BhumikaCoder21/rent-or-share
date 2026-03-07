@@ -4,7 +4,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 export const authMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // console.log("Authentication Middleware")
   // console.log("Authorization header:", req.headers.authorization);
@@ -20,10 +20,10 @@ export const authMiddleware = (
   try {
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET as string
+      process.env.JWT_SECRET as string,
     ) as JwtPayload;
     // console.log("Decoded JWT payload:", decoded);
-    req.body = decoded; 
+   (req as any).user = decoded;
     // console.log("Auth middleware passed, moving to next handler");
     next();
   } catch {
