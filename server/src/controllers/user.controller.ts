@@ -20,6 +20,7 @@ export const getProfileById = async (req: Request, res: Response) => {
 
 export const getAllProfiles = async (req: Request, res: Response) => {
   try {
+    console.log("I am in the controllers")
     const usersProfile = await getAllProfilesService();
 
     res.status(200).json({

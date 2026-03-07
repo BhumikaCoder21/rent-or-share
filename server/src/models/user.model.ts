@@ -11,7 +11,7 @@ const userSchema = new Schema(
     },
 
      rollNumber: {
-       type: Number,
+       type: String,
        required: true,
        unique: true,
     },

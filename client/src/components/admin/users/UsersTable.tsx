@@ -1,16 +1,11 @@
-type User = {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-};
+import { User } from "@/types/users.types";
 
 type Props = {
   users: User[];
   onDelete: (id: string) => void;
 };
 
-export default function UsersTable({ users, onDelete }: Props) {
+export function UsersTable({ users, onDelete }: Props) {
   const getRoleStyle = (role: string) => {
     if (role === "ADMIN") return "bg-purple-100 text-purple-700";
     if (role === "OWNER") return "bg-blue-100 text-blue-700";
