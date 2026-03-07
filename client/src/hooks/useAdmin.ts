@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import API from "@/api/axios";
-import { getDashboardStats, getAllProfiles } from "@/api/admin.api";
+import { getDashboardStats, getAllProfiles, deleteUser as deleteUserApi } from "@/api/admin.api";
 import { User } from "@/types/users.types";
 
 export interface AdminDashboardData {
@@ -63,20 +62,14 @@ export const useAdmin = () => {
     getProfiles();
   }, []);
 
-  const deleteUser = async (userId: string): Promise<any> => {
+  const deleteUser = async (userId: string): Promise<void> => {
     try {
       setLoading(true);
       setError(null);
 
-      const token = localStorage.getItem("token");
+      await deleteUserApi(userId);
 
-      const res = await API.delete(`/admin/users/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      return res.data;
+      setProfiles((prev) => prev.filter((user) => user._id !== userId));
     } catch (err: any) {
       setError(err.response?.data?.message || "Something went wrong");
       throw err;

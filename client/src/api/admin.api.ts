@@ -17,3 +17,13 @@ export const getAllProfiles = async () => {
       }
    });
 };    
+
+
+export const deleteUser = async (id : string) => {
+   const token = localStorage.getItem("token");
+   return API.delete(`/user/profile/${id}`, {
+      headers: {
+         Authorization : `Bearer ${token}`,
+      }
+   });
+};    
