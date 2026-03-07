@@ -34,18 +34,22 @@ export default function LoginForm() {
   });
 
  const onSubmit = async (data: LoginRequest) => {
-     try {
- 
-      const res =  await login(data);
-      localStorage.setItem("token", res.token)
-       alert("Login successful 🎉");
- 
-       router.push("/landing-page");
-     } catch (error) {
-       console.error(error);
-       alert("Login failed");
-     }
-   };
+   try {
+     const res = await login(data);
+
+     console.log("LOGIN RESPONSE:", res); 
+
+     localStorage.setItem("token", res.token);
+     localStorage.setItem("user", JSON.stringify(res.user));
+
+     alert("Login successful 🎉");
+
+     router.push("/landing-page");
+   } catch (error) {
+     console.error(error);
+     alert("Login failed");
+   }
+ };
   return (
     <Form {...form}>
       <form

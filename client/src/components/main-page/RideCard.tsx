@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { Ride } from "@/types/ride.types";
+import { useRides } from "@/hooks/useRides";
 
 interface RideCardProps {
   ride: Ride;
@@ -22,6 +23,7 @@ interface RideCardProps {
 
 export default function RideCard({ ride }: RideCardProps) {
   const [showContact, setShowContact] = useState(false);
+  const { removeRide } = useRides();
 
   const formattedDate = new Date(ride.date).toLocaleDateString("en-IN", {
     day: "numeric",
@@ -33,11 +35,25 @@ export default function RideCard({ ride }: RideCardProps) {
     `Hi! I'm interested in joining your ride from ${ride.from} to ${ride.to} on ${formattedDate} at ${ride.time}.`,
   );
 
-  // current logged in user
-  const currentUserId =
-    typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+
+const currentUserId =
+  typeof window !== "undefined"
+    ? JSON.parse(localStorage.getItem("user") || "{}")._id
+    : null;
 
   const isOwner = ride.user === currentUserId;
+  console.log("ride.user:", ride.user);
+  console.log("currentUserId:", currentUserId);
+
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this ride?")) return;
+
+    try {
+      await removeRide(ride._id);
+    } catch (error) {
+      console.error("Error deleting ride:", error);
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 flex flex-col gap-4">
@@ -50,7 +66,7 @@ export default function RideCard({ ride }: RideCardProps) {
         </div>
       </div>
 
-   
+      
       <div className="flex justify-between text-sm text-gray-600">
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4" />
@@ -65,7 +81,6 @@ export default function RideCard({ ride }: RideCardProps) {
 
       <hr />
 
-     
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2 text-gray-700">
           {ride.vehicleType === "car" ? (
@@ -89,14 +104,19 @@ export default function RideCard({ ride }: RideCardProps) {
         </div>
       </div>
 
-    
+     
       {isOwner ? (
         <div className="flex gap-3 mt-2">
-          <button className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-xl">
-            Update Ride
-          </button>
+          <Link href={`/edit-ride/${ride._id}`} className="flex-1">
+            <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-xl">
+              Update Ride
+            </button>
+          </Link>
 
-          <button className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-xl">
+          <button
+            onClick={handleDelete}
+            className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-xl"
+          >
             Delete Ride
           </button>
         </div>
