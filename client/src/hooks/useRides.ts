@@ -1,31 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getAllRides, createRide } from "@/api/rideApi";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getAllRides, createRide, deleteRide } from "@/api/rideApi";
 import { Ride } from "@/types/ride.types";
 
 export const useRides = () => {
-  const [rides, setRides] = useState<Ride[]>([]);
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-  const fetchRides = async () => {
-    try {
-      setLoading(true);
-      const data = await getAllRides();
-      setRides(data);
-    } finally {
-      setLoading(false);
-    }
+  const { data: rides = [], isLoading: loading } = useQuery({
+    queryKey: ["rides"],
+    queryFn: getAllRides,
+  });
+
+  const mutation = useMutation({
+    mutationFn: createRide,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["rides"] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteRide,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["rides"] });
+    },
+  });
+
+  return {
+    rides,
+    loading,
+    addRide: mutation.mutateAsync,
+    removeRide: deleteMutation.mutateAsync,
   };
-
-  const addRide = async (ride: Ride) => {
-    const newRide = await createRide(ride);
-    setRides((prev) => [...prev, newRide]);
-  };
-
-  useEffect(() => {
-    fetchRides();
-  }, []);
-
-  return { rides, loading, addRide, fetchRides };
 };
+

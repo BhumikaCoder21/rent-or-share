@@ -20,16 +20,28 @@ interface RideCardProps {
   ride: Ride;
 }
 
-
 export default function RideCard({ ride }: RideCardProps) {
   const [showContact, setShowContact] = useState(false);
 
+  const formattedDate = new Date(ride.date).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
   const whatsappMessage = encodeURIComponent(
-    `Hi! I'm interested in joining your ride from ${ride.from} to ${ride.to} on ${ride.date} at ${ride.time}.`,
+    `Hi! I'm interested in joining your ride from ${ride.from} to ${ride.to} on ${formattedDate} at ${ride.time}.`,
   );
+
+  // current logged in user
+  const currentUserId =
+    typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+
+  const isOwner = ride.user === currentUserId;
 
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 flex flex-col gap-4">
+      
       <div className="flex items-start gap-3">
         <MapPin className="text-[#00AFF5] mt-1" />
         <div>
@@ -38,11 +50,13 @@ export default function RideCard({ ride }: RideCardProps) {
         </div>
       </div>
 
+   
       <div className="flex justify-between text-sm text-gray-600">
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4" />
-          <span>{ride.date}</span>
+          <span>{formattedDate}</span>
         </div>
+
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4" />
           <span>{ride.time}</span>
@@ -51,6 +65,7 @@ export default function RideCard({ ride }: RideCardProps) {
 
       <hr />
 
+     
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2 text-gray-700">
           {ride.vehicleType === "car" ? (
@@ -74,41 +89,56 @@ export default function RideCard({ ride }: RideCardProps) {
         </div>
       </div>
 
-      {!showContact && (
-        <button
-          onClick={() => setShowContact(true)}
-          className="mt-2 w-full bg-[#00AFF5] hover:bg-[#0099d6] text-white font-semibold py-2 rounded-xl"
-        >
-          Join Ride
-        </button>
-      )}
+    
+      {isOwner ? (
+        <div className="flex gap-3 mt-2">
+          <button className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded-xl">
+            Update Ride
+          </button>
 
-      {showContact && (
-        <div className="mt-3 bg-gray-50 rounded-xl p-4 space-y-3">
-          <p className="text-sm text-gray-600">Contact Rider</p>
-
-          <p className="font-semibold text-lg">{ride.phone}</p>
-
-          <div className="flex gap-3">
-            <Link
-              href={`tel:${ride.phone}`}
-              className="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2 rounded-xl font-semibold"
-            >
-              <Phone className="w-4 h-4" />
-              Call
-            </Link>
-
-            <Link
-              href={`https://wa.me/91${ride.phone}?text=${whatsappMessage}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white py-2 rounded-xl font-semibold"
-            >
-              <MessageCircle className="w-4 h-4" />
-              WhatsApp
-            </Link>
-          </div>
+          <button className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-xl">
+            Delete Ride
+          </button>
         </div>
+      ) : (
+        <>
+          {!showContact && (
+            <button
+              onClick={() => setShowContact(true)}
+              className="mt-2 w-full bg-[#00AFF5] hover:bg-[#0099d6] text-white font-semibold py-2 rounded-xl"
+            >
+              Join Ride
+            </button>
+          )}
+
+          {showContact && (
+            <div className="mt-3 bg-gray-50 rounded-xl p-4 space-y-3">
+              <p className="text-sm text-gray-600">Contact Rider</p>
+
+              <p className="font-semibold text-lg">{ride.phone}</p>
+
+              <div className="flex gap-3">
+                <Link
+                  href={`tel:${ride.phone}`}
+                  className="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2 rounded-xl font-semibold"
+                >
+                  <Phone className="w-4 h-4" />
+                  Call
+                </Link>
+
+                <Link
+                  href={`https://wa.me/91${ride.phone}?text=${whatsappMessage}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white py-2 rounded-xl font-semibold"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  WhatsApp
+                </Link>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

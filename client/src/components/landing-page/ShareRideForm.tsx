@@ -50,11 +50,34 @@ export default function ShareRideForm({ onClose }: ShareRideFormProps) {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Ride Posted:", { ...formData, date: selectedDate });
-    onClose();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const rideData = {
+    ...formData,
+    date: selectedDate,
   };
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("http://localhost:8080/api/rides", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(rideData),
+    });
+
+    const data = await res.json();
+    console.log(data);
+
+    onClose();
+  } catch (error) {
+    console.error("Error posting ride:", error);
+  }
+};
 
   return (
     <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl flex flex-col max-h-[90vh]">
