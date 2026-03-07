@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/profile", authMiddleware, getProfileById);
 
-router.get("/all-profile", authMiddleware, getAllProfiles);
+router.get("/all-profiles", authMiddleware, getAllProfiles);
 
 router.delete("/profiles", authMiddleware, deleteAllProfiles);
 

@@ -1,34 +1,44 @@
 "use client";
 
-import { useState } from "react";
 import { loginUser, registerUser } from "@/api/authApi";
 import { LoginRequest, RegisterRequest, User } from "@/types/auth.types";
+import { useState } from "react";
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [registerLoading, setRegisterLoading] = useState(false);
 
   const login = async (data: LoginRequest) => {
     try {
-      setLoading(true);
+      setLoginLoading(true);
       const res = await loginUser(data);
       setUser(res.user);
       return res;
     } finally {
-      setLoading(false);
+      setLoginLoading(false);
     }
   };
 
   const register = async (data: RegisterRequest) => {
     try {
-      setLoading(true);
+      setRegisterLoading(true);
       const res = await registerUser(data);
       setUser(res.user);
       return res;
     } finally {
-      setLoading(false);
+      setRegisterLoading(false);
     }
   };
 
-  return { user, loading, login, register };
+  return {
+    user,
+
+    login,
+    loginLoading,
+
+    register,
+    registerLoading,
+  };
 };
