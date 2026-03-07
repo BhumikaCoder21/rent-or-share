@@ -4,7 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import { Search, Calendar, Circle } from "lucide-react";
 import CalendarPopup from "@/components/ui/CalendarPopup";
 
-export default function SearchBar() {
+interface SearchProps {
+  onSearch: (data: { from: string; to: string; date: Date | null }) => void;
+}
+
+export default function SearchBar({ onSearch }: SearchProps) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -36,21 +40,21 @@ export default function SearchBar() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ from, to, selectedDate });
+
+    onSearch({
+      from,
+      to,
+      date: selectedDate,
+    });
   };
 
   return (
     <div className="w-full mx-auto p-4">
       <form
         onSubmit={handleSearch}
-        className="
-          flex flex-col md:flex-row
-          bg-white rounded-2xl md:rounded-full
-          shadow-lg border border-gray-100
-          overflow-visible
-        "
+        className="flex flex-col md:flex-row bg-white rounded-2xl md:rounded-full shadow-lg border border-gray-100 overflow-visible"
       >
-     
+        {/* FROM */}
         <div className="flex-1 px-4 py-3">
           <div className="flex items-center gap-3">
             <Circle className="w-5 h-5 text-gray-400 shrink-0" />
@@ -65,7 +69,6 @@ export default function SearchBar() {
         </div>
 
         <div className="md:hidden h-px bg-gray-200 mx-4" />
-       
         <div className="hidden md:block w-px h-10 bg-gray-200 self-center" />
 
       
@@ -83,10 +86,9 @@ export default function SearchBar() {
         </div>
 
         <div className="md:hidden h-px bg-gray-200 mx-4" />
-        
         <div className="hidden md:block w-px h-10 bg-gray-200 self-center" />
 
-      
+     
         <div
           ref={calendarRef}
           className="flex-1 px-4 py-3 relative cursor-pointer"
@@ -117,19 +119,11 @@ export default function SearchBar() {
           )}
         </div>
 
-       
+      
         <div className="p-3 md:p-1">
           <button
             type="submit"
-            className="
-              w-full md:w-auto
-              bg-[#00AFF5] hover:bg-[#0099d6]
-              text-white font-bold
-              px-8 py-3
-              rounded-xl md:rounded-full
-              flex items-center justify-center gap-2
-              transition-colors
-            "
+            className="w-full md:w-auto bg-[#00AFF5] hover:bg-[#0099d6] text-white font-bold px-8 py-3 rounded-xl md:rounded-full flex items-center justify-center gap-2 transition-colors"
           >
             <Search className="w-5 h-5" />
             Search
