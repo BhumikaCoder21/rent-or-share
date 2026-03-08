@@ -7,10 +7,14 @@ import SearchBar from "@/components/landing-page/SearchBar";
 import ActionCards from "@/components/landing-page/ActionCards";
 
 import { useRides } from "@/hooks/useRides";
+import { useScooty } from "@/hooks/useRents";
+
 import RideCard from "@/components/main-page/RideCard";
+import ScootyRentCard from "@/components/main-page/ScootyRentCard";
 
 export default function UserCard() {
   const { rides, loading } = useRides();
+  const { scooties, loading: rentLoading } = useScooty();
 
   const [searchData, setSearchData] = useState<{
     from: string;
@@ -59,11 +63,41 @@ export default function UserCard() {
 
       <ActionCards />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        {filteredRides.map((ride) => (
-          <RideCard key={ride._id} ride={ride} />
-        ))}
-      </div>
+      {/* Available Rides */}
+      <section className="px-6 py-10">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">
+          Available Rides
+        </h2>
+
+        {filteredRides.length === 0 ? (
+          <p className="text-gray-500">No rides available.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredRides.map((ride) => (
+              <RideCard key={ride._id} ride={ride} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Available Rents */}
+      <section className="px-6 py-10">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">
+          Available Rents
+        </h2>
+
+        {rentLoading ? (
+          <p className="text-gray-500">Loading scooties...</p>
+        ) : scooties.length === 0 ? (
+          <p className="text-gray-500">No scooties available for rent.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {scooties.map((scooty) => (
+              <ScootyRentCard key={scooty._id} data={scooty} />
+            ))}
+          </div>
+        )}
+      </section>
     </main>
   );
 }
