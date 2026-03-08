@@ -1,4 +1,4 @@
-import  Vehicle  from "../models/vehicle.model";
+import Vehicle from "../models/vehicle.model";
 
 export const registerVehicleService = async (data: any) => {
   const vehicle = await Vehicle.create(data);
@@ -6,7 +6,7 @@ export const registerVehicleService = async (data: any) => {
 };
 
 export const getAllVehiclesService = async () => {
-  const vehicles = await Vehicle.find();
+  const vehicles = await Vehicle.find().populate("owner", "name phone"); // fetch owner details
 
   if (!vehicles || vehicles.length === 0) {
     throw new Error("No vehicles found");
@@ -16,7 +16,7 @@ export const getAllVehiclesService = async () => {
 };
 
 export const getVehicleByIdService = async (id: string) => {
-  const vehicle = await Vehicle.findById(id);
+  const vehicle = await Vehicle.findById(id).populate("owner", "name phone"); // fetch owner details
 
   if (!vehicle) {
     throw new Error("Vehicle not found");
@@ -29,7 +29,7 @@ export const updateVehicleService = async (id: string, data: any) => {
   const updatedVehicle = await Vehicle.findByIdAndUpdate(
     id,
     { $set: data },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!updatedVehicle) {

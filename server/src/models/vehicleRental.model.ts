@@ -2,48 +2,76 @@ import mongoose from "mongoose";
 
 const vehicleRentalSchema = new mongoose.Schema(
   {
-    vehicle: {
+    ownerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Vehicle",
-      required: true
+      ref: "User",
+      required: true,
     },
 
-    pickupLocation: {
+    ownerName: {
       type: String,
-      required: true
+      required: true,
+      trim: true,
+    },
+
+    contact: {
+      type: String,
+      required: true,
+    },
+
+    location: {
+      type: String,
+      required: true,
+      trim: true,
     },
 
     pricePerHour: {
       type: Number,
       required: true,
-      min: 1
+      min: 1,
     },
 
-    availability: {
-      fromDate: {
-        type: Date,
-        required: true
-      },
-      toDate: {
-        type: Date,
-        required: true
-      },
-      availableFromTime: {
-        type: String,
-        required: true
-      },
-      availableTillTime: {
-        type: String,
-        required: true
-      }
+    startDate: {
+      type: Date,
+      required: true,
+    },
+
+    endDate: {
+      type: Date,
+      required: true,
+    },
+
+    availableFrom: {
+      type: String,
+      required: true,
+    },
+
+    availableTill: {
+      type: String,
+      required: true,
+    },
+
+    helmetIncluded: {
+      type: Boolean,
+      default: false,
+    },
+
+    fuelIncluded: {
+      type: Boolean,
+      default: false,
+    },
+
+    notes: {
+      type: String,
+      default: "",
     },
 
     isActive: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("VehicleRental", vehicleRentalSchema);
