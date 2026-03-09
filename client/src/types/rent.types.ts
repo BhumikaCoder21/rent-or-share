@@ -1,14 +1,28 @@
 export interface ScootyRent {
-  id: string;
+  _id: string;
+
+  ownerId: string;
+
   ownerName: string;
   contact: string;
+
+  vehicleNumber: string;
+
   location: string;
+
+  pricePerHour: number;
+
   startDate: string;
   endDate: string;
+
   availableFrom: string;
   availableTill: string;
-  pricePerHour: number;
+
   helmetIncluded: boolean;
   fuelIncluded: boolean;
+
   notes?: string;
+
+  createdAt?: string;
+  updatedAt?: string;
 }

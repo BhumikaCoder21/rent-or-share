@@ -12,9 +12,9 @@ const router = Router();
 
 router.post("/", authMiddleware, createRide);
 
-router.get("/", authMiddleware, getAllRides);
+router.get("/", getAllRides);
 
-router.get("/:id", authMiddleware, getRideById);
+router.get("/:id", getRideById);
 
 router.put("/:id", authMiddleware, updateRide);
 

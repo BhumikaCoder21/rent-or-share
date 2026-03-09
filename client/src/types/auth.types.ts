@@ -6,14 +6,14 @@ export interface LoginRequest {
 
 export interface RegisterRequest {
   name: string;
-  rollNo: string;
-  phone: string;
+  rollNumber: string;
+  phoneNumber: string;
   email: string;
   password: string;
 }
 
 export interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
 }

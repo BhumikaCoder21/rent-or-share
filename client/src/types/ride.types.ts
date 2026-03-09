@@ -1,5 +1,5 @@
 export interface Ride {
-  id: string;
+  _id: string;
   from: string;
   to: string;
   date: string;
@@ -8,4 +8,5 @@ export interface Ride {
   seats: number;
   price: number;
   phone: string;
+  user: string;
 }

@@ -1,102 +1,143 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
 import { User, Mail, Lock } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { LoginRequest } from "@/types/auth.types";
+import { useAuth } from "@/hooks/useAuth"
+import {useToggle} from "@/hooks/useProfile"
+
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+
 
 export default function LoginForm() {
-  const [formData, setFormData] = useState<LoginRequest>({
-    name: "",
-    email: "",
-    password: "",
+  const { setIsOpen } = useToggle();
+  const router = useRouter();
+  const { login, loginLoading } = useAuth();
+
+
+  const form = useForm<LoginRequest>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
   });
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-  };
+ const onSubmit = async (data: LoginRequest) => {
+   try {
+     const res = await login(data);
 
+     console.log("LOGIN RESPONSE:", res); 
+
+     localStorage.setItem("token", res.token);
+     localStorage.setItem("user", JSON.stringify(res.user));
+
+     alert("Login successful 🎉");
+     setIsOpen(true);
+     router.push("/main-page");
+   } catch (error) {
+     console.error(error);
+     alert("Login failed");
+   }
+ };
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 mt-6">
-      <div className="space-y-2">
-        <label
-          htmlFor="name"
-          className="text-sm font-medium text-gray-700 block"
-        >
-          Full Name
-        </label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <User className="h-5 w-5 text-gray-400 group-focus-within:text-violet-600 transition-colors" />
-          </div>
-          <input
-            id="name"
-            type="text"
-            required
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="John Doe"
-            className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <label
-          htmlFor="email"
-          className="text-sm font-medium text-gray-700 block"
-        >
-          College Email ID
-        </label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-violet-600 transition-colors" />
-          </div>
-          <input
-            id="email"
-            type="email"
-            required
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            placeholder="student@college.edu"
-            className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <label
-          htmlFor="password"
-          className="text-sm font-medium text-gray-700 block"
-        >
-          Password
-        </label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-violet-600 transition-colors" />
-          </div>
-          <input
-            id="password"
-            type="password"
-            required
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-            placeholder="••••••••"
-            className="w-full pl-10 pr-4 py-3 bg-violet-50 border border-violet-100 text-gray-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
-          />
-        </div>
-      </div>
-
-      <button
-        type="submit"
-        className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-violet-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 mt-6"
       >
-        Verify & Login
-      </button>
-    </form>
+       
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Full Name</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <User className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                  <Input
+                    placeholder="John Doe"
+                    className="pl-10"
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>College Email ID</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                  <Input
+                    type="email"
+                    placeholder="student@college.edu"
+                    className="pl-10"
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+       
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    className="pl-10"
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+         <Button
+          type="submit"
+          disabled={loginLoading}
+          className="w-full bg-violet-600 hover:bg-violet-700 flex items-center justify-center gap-2"
+        >
+          {loginLoading ? (
+            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            "Login and Verify"
+          )}
+        </Button>
+      </form>
+    </Form>
   );
 }

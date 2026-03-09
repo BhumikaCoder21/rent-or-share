@@ -1,139 +1,175 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { User, Mail, Lock, Phone, CreditCard } from "lucide-react";
-import UserProfileCard from "@/components/main-page/UserProfileCard";
 import { RegisterRequest } from "@/types/auth.types";
+import { useAuth } from "@/hooks/useAuth";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function RegisterForm() {
-  const [formData, setFormData] = useState<RegisterRequest>({
-    name: "",
-    rollNo: "",
-    phone: "",
-    email: "",
-    password: "",
+  const { register, registerLoading } = useAuth();
+  const router = useRouter();
+
+  const form = useForm<RegisterRequest>({
+    defaultValues: {
+      name: "",
+      rollNumber: "",
+      phoneNumber: "",
+      email: "",
+      password: "",
+    },
   });
 
-  const [showProfile, setShowProfile] = useState(false);
+  const onSubmit = async (data: RegisterRequest) => {
+    try {
+      await register(data);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
+      alert("Registration successful 🎉");
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Register Data:", formData);
-    setShowProfile(true);
+      router.push("/main-page");
+    } catch (error) {
+      console.error(error);
+      alert("Registration failed");
+    }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-10 items-start">
-      <form onSubmit={handleSubmit} className="space-y-5 mt-6 w-full max-w-xl">
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 block">
-            Full Name
-          </label>
-          <div className="relative">
-            <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-            <input
-              id="name"
-              required
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="John Doe"
-              className="w-full pl-10 py-3 rounded-xl bg-violet-50 border"
-            />
-          </div>
-        </div>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-5 mt-6 w-full max-w-xl"
+      >
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Full Name</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <Input
+                    placeholder="John Doe"
+                    className="pl-10 bg-violet-50"
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 block">
-            College Roll No.
-          </label>
-          <div className="relative">
-            <CreditCard className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-            <input
-              id="rollNo"
-              required
-              value={formData.rollNo}
-              onChange={handleChange}
-              placeholder="22CSE045"
-              className="w-full pl-10 py-3 rounded-xl bg-violet-50 border uppercase"
-            />
-          </div>
-        </div>
+        <FormField
+          control={form.control}
+          name="rollNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>College Roll No.</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <CreditCard className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <Input
+                    placeholder="22CSE045"
+                    className="pl-10 bg-violet-50 uppercase"
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 block">
-            Phone Number
-          </label>
-          <div className="relative">
-            <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-            <input
-              id="phone"
-              required
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="9876543210"
-              className="w-full pl-10 py-3 rounded-xl bg-violet-50 border"
-            />
-          </div>
-        </div>
+        <FormField
+          control={form.control}
+          name="phoneNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <Input
+                    placeholder="9876543210"
+                    className="pl-10 bg-violet-50"
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 block">
-            College Email ID
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-            <input
-              id="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="student@college.edu"
-              className="w-full pl-10 py-3 rounded-xl bg-violet-50 border"
-            />
-          </div>
-        </div>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>College Email ID</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <Input
+                    type="email"
+                    placeholder="student@college.edu"
+                    className="pl-10 bg-violet-50"
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 block">
-            Create Password
-          </label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-            <input
-              id="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              className="w-full pl-10 py-3 rounded-xl bg-violet-50 border"
-            />
-          </div>
-        </div>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Create Password</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    className="pl-10 bg-violet-50"
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <button
+        <Button
           type="submit"
-          className="w-full bg-violet-600 text-white py-3 rounded-xl font-semibold"
+          disabled={registerLoading}
+          className="w-full bg-violet-600 hover:bg-violet-700 flex items-center justify-center gap-2"
         >
-          Create Account
-        </button>
+          {registerLoading ? (
+            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            "Create Account"
+          )}
+        </Button>
       </form>
-
-      {showProfile && (
-        <div className="w-full max-w-sm">
-          <UserProfileCard
-            name={formData.name}
-            rollNo={formData.rollNo}
-            phone={formData.phone}
-            email={formData.email}
-          />
-        </div>
-      )}
-    </div>
+    </Form>
   );
 }

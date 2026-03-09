@@ -2,62 +2,60 @@ import mongoose from "mongoose";
 
 const rideSchema = new mongoose.Schema(
   {
-    route: {
-      from: {
-        type: String,
-        required: true,
-        trim: true
-      },
-      to: {
-        type: String,
-        required: true,
-        trim: true
-      }
+    from: {
+      type: String,
+      required: true,
+      trim: true,
     },
 
-    schedule: {
-      date: {
-        type: Date,
-        required: true
-      },
-      time: {
-        type: String, 
-        required: true
-      }
+    to: {
+      type: String,
+      required: true,
+      trim: true,
     },
 
-    rideInfo: {
-      vehicleType: {
-        type: String,
-        enum: ["scooty", "car", "bike"],
-        required: true
-      },
-      seatsAvailable: {
-        type: Number,
-        required: true,
-        min: 1
-      },
-      pricePerSeat: {
-        type: Number,
-        required: true,
-        min: 0
-      }
+    date: {
+      type: Date,
+      required: true,
     },
 
-    postedBy: {
+    time: {
+      type: String,
+      required: true,
+    },
+
+    seats: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+
+    vehicleType: {
+      type: String,
+      enum: ["scooty", "car"],
+      required: true,
+    },
+
+    phone: {
+      type: String,
+      required: true,
+    },
+
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
-
-    isActive: {
-      type: Boolean,
-      default: true
-    }
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 export default mongoose.model("Ride", rideSchema);

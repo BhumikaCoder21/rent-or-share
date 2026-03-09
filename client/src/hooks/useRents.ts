@@ -12,7 +12,8 @@ export const useScooty = () => {
     try {
       setLoading(true);
       const data = await getAllScooties();
-      setScooties(data);
+      console.log("RENTS API:", data); 
+      setScooties(data.data);
     } finally {
       setLoading(false);
     }

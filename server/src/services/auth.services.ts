@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import  User  from "../models/user.model";
+import User from "../models/user.model";
 
 export const registerUser = async (data: any) => {
-  const { name, rollNumber, phoneNumber, email, password, role } = data;
+  const { name, rollNumber, phoneNumber, email, password } = data;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -18,20 +18,24 @@ export const registerUser = async (data: any) => {
     phoneNumber,
     email,
     password: hashedPassword,
-    role
   });
 
   return user;
 };
 
 export const loginUser = async (email: string, password: string) => {
+
   const user = await User.findOne({ email });
   if (!user) {
     throw new Error("Invalid credentials");
   }
-  if(user.password==null) throw new Error("Password not found")
+
+  if (user.password == null) {
+    throw new Error("Password not found");
+  }
 
   const isMatch = await bcrypt.compare(password, user.password);
+
   if (!isMatch) {
     throw new Error("Invalid credentials");
   }
@@ -40,11 +44,16 @@ export const loginUser = async (email: string, password: string) => {
     {
       id: user._id,
       email: user.email,
-      role: user.role
+      role: user.role,
     },
     process.env.JWT_SECRET as string,
-    { expiresIn: "7d" }
+    { expiresIn: "7d" },
   );
 
-  return token;
+  console.log("the token is ", token);
+
+  return {
+    token,
+    user,
+  };
 };

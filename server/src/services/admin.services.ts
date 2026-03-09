@@ -1,13 +1,20 @@
-import  userModel  from "../models/user.model";
-import  vehicleModel from "../models/vehicle.model"
-import rideModel from "../models/ride.model";
-import vehicleRentalModel from "../models/vehicleRental.model";
+import  User  from "../models/user.model";
+import  Vehicle from "../models/vehicle.model"
+import Ride from "../models/ride.model";
+import VehicleRental from "../models/vehicleRental.model";
 
-export const adminDashboardService = async () => {
-  const totalUsers = await userModel.countDocuments();
-  const totalVehicles = await vehicleModel.countDocuments();
-  const totalRides = await rideModel.countDocuments();
-  const activeRentals = await vehicleRentalModel.countDocuments({
+export interface AdminDashboardData {
+  totalUsers: number;
+  totalVehicles: number;
+  totalRides: number;
+  activeRentals: number;
+}
+
+export const adminDashboardService = async (): Promise<AdminDashboardData> => {
+  const totalUsers = await User.countDocuments();
+  const totalVehicles = await Vehicle.countDocuments();
+  const totalRides = await Ride.countDocuments();
+  const activeRentals = await VehicleRental.countDocuments({
     status: "active",
   });
 
@@ -16,5 +23,5 @@ export const adminDashboardService = async () => {
     totalVehicles,
     totalRides,
     activeRentals,
-  };
+  } as AdminDashboardData;
 };

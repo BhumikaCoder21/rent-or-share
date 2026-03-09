@@ -1,25 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { User } from "lucide-react";
 import UserProfileCard from "@/components/main-page/UserProfileCard";
 
 export default function Navbar() {
-  const isLoggedIn = false;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setShowProfile(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
   }, []);
 
   return (
@@ -35,6 +27,7 @@ export default function Navbar() {
             >
               Login
             </Link>
+
             <Link
               href="/register"
               className="px-4 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
@@ -43,7 +36,7 @@ export default function Navbar() {
             </Link>
           </div>
         ) : (
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative">
             <button
               onClick={() => setShowProfile(!showProfile)}
               className="h-10 w-10 rounded-full bg-indigo-600 text-white flex items-center justify-center transition-transform active:scale-95 shadow-md"
@@ -52,21 +45,14 @@ export default function Navbar() {
             </button>
 
             <div
-              className={`
-                absolute right-0 top-full mt-3 
-                z-50 
-                origin-top-right transition-all duration-200 ease-out
-                ${showProfile ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}
-              `}
+              className={`absolute right-0 top-full mt-3 z-50 origin-top-right transition-all duration-200 ease-out ${
+                showProfile
+                  ? "scale-100 opacity-100 visible"
+                  : "scale-95 opacity-0 invisible"
+              }`}
             >
-             
               <div className="w-[calc(100vw-3rem)] sm:w-80">
-                <UserProfileCard
-                  name="Bhumika Gupta"
-                  rollNo="CS23B030"
-                  phone="98765 43210"
-                  email="bhumika@college.edu"
-                />
+                <UserProfileCard />
               </div>
             </div>
           </div>

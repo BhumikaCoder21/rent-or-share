@@ -22,7 +22,7 @@ export const getProfileByIdService = async (data: AuthUserData) => {
 
 export const getAllProfilesService = async () => {
   const users = await User.find().select(
-    "_id name rollNumber phoneNumber email role"
+    "_id name rollNumber email role"
   );
 
   if (!users || users.length === 0) {

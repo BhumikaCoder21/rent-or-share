@@ -21,11 +21,24 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
   const hours = Array.from({ length: 12 }, (_, i) =>
     (i + 1).toString().padStart(2, "0"),
   );
+
   const minutes = ["00", "15", "30", "45"];
 
+  const user =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("user") || "{}")
+      : null;
+
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
-    ownerName: "",
-    contact: "",
+    ownerName: user?.name || "",
+    contact: user?.phone || "",
+    vehicleNumber: "",
+    type: "scooter",
     location: "",
     pricePerHour: "",
     startDate: null as Date | null,
@@ -52,14 +65,63 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
         setOpenCalendar(null);
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Scooty Rent Data:", formData);
-    onClose?.();
+
+    try {
+      setLoading(true);
+
+     console.log({
+       owner: user?._id,
+       ownerName: formData.ownerName,
+       contact: formData.contact,
+       vehicleNumber: formData.vehicleNumber,
+       type: "scooty",
+       pickupLocation: formData.location,
+       pricePerHour: Number(formData.pricePerHour),
+     });
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/rent`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ownerId: user?._id,
+          ownerName: formData.ownerName,
+          contact: formData.contact,
+          vehicleNumber: formData.vehicleNumber,
+          location: formData.location,
+          pricePerHour: Number(formData.pricePerHour),
+          startDate: formData.startDate,
+          endDate: formData.endDate,
+          availableFrom: formData.availableFrom,
+          availableTill: formData.availableTill,
+          helmetIncluded: formData.helmetIncluded,
+          fuelIncluded: formData.fuelIncluded,
+          notes: formData.notes,
+        }),
+      });
+
+     if (!res.ok) {
+       const err = await res.json();
+       console.log("Server error:", err);
+       throw new Error("Failed to create listing");
+     }
+
+      onClose?.();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to list scooty");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formatDate = (d: Date | null) =>
@@ -87,6 +149,7 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
         <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">
           {label}
         </label>
+
         <div className="flex bg-gray-50 border border-gray-200 rounded-xl overflow-hidden">
           <select
             className="flex-1 p-3 text-center bg-transparent font-medium"
@@ -127,14 +190,16 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
 
   return (
     <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl flex flex-col max-h-[90vh]">
-  
-      <div className="bg-[#00AFF5] px-6 py-5 flex justify-between items-start shrink-0">
+      
+
+      <div className="bg-[#00AFF5] px-6 py-5 flex justify-between items-start">
         <div>
           <h2 className="text-2xl font-bold text-white">Give Scooty on Rent</h2>
           <p className="text-blue-100 text-sm mt-1">
             Earn money when your scooty is idle
           </p>
         </div>
+
         {onClose && (
           <button
             onClick={onClose}
@@ -145,10 +210,10 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
         )}
       </div>
 
-
       <div className="flex-1 overflow-y-auto p-6">
         <form onSubmit={handleSubmit} className="space-y-8">
-   
+       
+
           <div className="space-y-4">
             <h3 className="font-semibold text-lg flex items-center gap-2">
               <User className="text-[#00AFF5]" /> Owner Details
@@ -166,6 +231,7 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
 
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+
               <input
                 required
                 placeholder="Phone Number"
@@ -180,54 +246,64 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
 
           <hr />
 
+
           <div className="space-y-4">
             <h3 className="font-semibold text-lg flex items-center gap-2">
               <Bike className="text-[#00AFF5]" /> Scooty Details
             </h3>
 
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                required
-                placeholder="Pickup Location"
-                className="w-full pl-9 p-3 bg-gray-50 border border-gray-200 rounded-xl"
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData({ ...formData, location: e.target.value })
-                }
-              />
-            </div>
+            <input
+              required
+              placeholder="Vehicle Number (e.g. WB34AB1234)"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl"
+              value={formData.vehicleNumber}
+              onChange={(e) =>
+                setFormData({ ...formData, vehicleNumber: e.target.value })
+              }
+            />
 
-            <div className="relative">
-              <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                required
-                type="number"
-                placeholder="Price per hour"
-                className="w-full pl-9 p-3 bg-gray-50 border border-gray-200 rounded-xl"
-                value={formData.pricePerHour}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    pricePerHour: e.target.value,
-                  })
-                }
-              />
-            </div>
+            <input
+              required
+              placeholder="Pickup Location"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl"
+              value={formData.location}
+              onChange={(e) =>
+                setFormData({ ...formData, location: e.target.value })
+              }
+            />
+
+            <input
+              required
+              type="number"
+              placeholder="Price per hour"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl"
+              value={formData.pricePerHour}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  pricePerHour: e.target.value,
+                })
+              }
+            />
           </div>
 
           <hr />
 
-          <div className="space-y-4">
+        
+
+          <div ref={calendarRef} className="space-y-4">
             <h3 className="font-semibold text-lg flex items-center gap-2">
               <Clock className="text-[#00AFF5]" /> Availability
             </h3>
 
-            <div ref={calendarRef} className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6">
+            
+
               <div className="relative">
                 <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">
                   From Date
                 </label>
+
                 <div
                   onClick={() => setOpenCalendar("start")}
                   className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl flex items-center gap-3 cursor-pointer"
@@ -240,24 +316,20 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
                   <CalendarPopup
                     selectedDate={formData.startDate}
                     onSelect={(d) => {
-                      setFormData({
-                        ...formData,
-                        startDate: d,
-                        endDate:
-                          formData.endDate && d && d > formData.endDate
-                            ? null
-                            : formData.endDate,
-                      });
+                      setFormData({ ...formData, startDate: d });
                       setOpenCalendar(null);
                     }}
                   />
                 )}
               </div>
 
+         
+
               <div className="relative">
                 <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">
                   To Date
                 </label>
+
                 <div
                   onClick={() => setOpenCalendar("end")}
                   className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl flex items-center gap-3 cursor-pointer"
@@ -284,19 +356,61 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
                 value={formData.availableFrom}
                 onChange={(v) => setFormData({ ...formData, availableFrom: v })}
               />
+
               <TimePicker
                 label="Available Till"
                 value={formData.availableTill}
                 onChange={(v) => setFormData({ ...formData, availableTill: v })}
               />
             </div>
+
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={formData.helmetIncluded}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      helmetIncluded: e.target.checked,
+                    })
+                  }
+                />
+                Helmet Included
+              </label>
+
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={formData.fuelIncluded}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      fuelIncluded: e.target.checked,
+                    })
+                  }
+                />
+                Fuel Included
+              </label>
+            </div>
+
+            <textarea
+              placeholder="Extra notes (optional)"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl"
+              rows={3}
+              value={formData.notes}
+              onChange={(e) =>
+                setFormData({ ...formData, notes: e.target.value })
+              }
+            />
           </div>
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-[#00AFF5] hover:bg-[#0099d6] text-white font-bold text-lg py-4 rounded-xl"
           >
-            List Scooty for Rent
+            {loading ? "Listing..." : "List Scooty for Rent"}
           </button>
         </form>
       </div>
