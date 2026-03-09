@@ -64,7 +64,7 @@ export default function UserCard() {
 
       <ActionCards />
 
-      {/* Available Rides */}
+   
       <section className="px-6 py-10">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">
           Available Rides
@@ -81,7 +81,6 @@ export default function UserCard() {
         )}
       </section>
 
-      {/* Available Rents */}
       <section className="px-6 py-10">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">
           Available Rents

@@ -1,15 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { Trash2, Pencil, User, Bike } from "lucide-react";
+import {
+  Trash2,
+  Pencil,
+  User,
+  Bike,
+  Phone,
+  MapPin,
+  IndianRupee,
+  Calendar,
+  Clock,
+  MessageCircle,
+} from "lucide-react";
+
+import { ScootyRent } from "@/types/rent.types";
 
 interface Props {
-  data: any;
+  data: ScootyRent;
   onDelete?: (id: string) => void;
 }
 
 export default function ScootyRentCard({ data, onDelete }: Props) {
   const [loading, setLoading] = useState(false);
+  const [showContact, setShowContact] = useState(false);
 
   if (!data) return null;
 
@@ -21,16 +35,24 @@ export default function ScootyRentCard({ data, onDelete }: Props) {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  const isOwner = user?._id === data.owner?._id;
+  const isOwner = user?._id === data.ownerId;
+
+  const formatDate = (d?: string) =>
+    d
+      ? new Date(d).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+      })
+      : "-";
 
   const handleDelete = async () => {
-    const confirmDelete = confirm("Delete this vehicle?");
+    const confirmDelete = confirm("Delete this listing?");
     if (!confirmDelete) return;
 
     try {
       setLoading(true);
 
-      await fetch(`http://localhost:8080/api/vehicle/${data._id}`, {
+      await fetch(`http://localhost:8080/api/rent/${data._id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -45,37 +67,109 @@ export default function ScootyRentCard({ data, onDelete }: Props) {
     }
   };
 
+  const whatsappMessage = encodeURIComponent(
+    `Hi ${data.ownerName}, I want to rent your scooty (${data.vehicleNumber}).`
+  );
+
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 flex flex-col gap-4">
-      
-      {/* Owner */}
+
+    
       <div className="flex items-center gap-2 font-semibold text-lg">
         <User className="text-[#00AFF5]" />
-        {data.owner?.name || "Unknown Owner"}
+        {data.ownerName}
       </div>
 
-      {/* Vehicle Type */}
+    
       <div className="flex items-center gap-2 text-gray-700 text-sm">
         <Bike className="w-4 h-4 text-[#00AFF5]" />
-        Vehicle Type: {data.type}
+        {data.vehicleNumber} (Scooty)
       </div>
 
-      {/* Vehicle Number */}
-      <div className="text-gray-700 text-sm">
-        <span className="font-semibold">Vehicle Number:</span>{" "}
-        {data.vehicleNumber}
+  
+      <div className="flex items-center gap-2 text-gray-700 text-sm">
+        <MapPin className="w-4 h-4 text-[#00AFF5]" />
+        {data.location}
       </div>
 
-      {/* Created Date */}
-      <div className="text-gray-500 text-xs">
-        Created: {new Date(data.createdAt).toLocaleString()}
+      <div className="flex items-center gap-2 text-gray-700">
+        <IndianRupee className="w-4 h-4 text-[#00AFF5]" />
+        <span className="font-semibold">₹{data.pricePerHour} / hour</span>
       </div>
 
-      <div className="text-gray-500 text-xs">
-        Updated: {new Date(data.updatedAt).toLocaleString()}
+      <hr />
+
+      <div className="flex justify-between text-sm text-gray-600">
+        <div className="flex items-center gap-2">
+          <Calendar className="w-4 h-4" />
+          {formatDate(data.startDate)} → {formatDate(data.endDate)}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4" />
+          {data.availableFrom} - {data.availableTill}
+        </div>
       </div>
 
-      {/* Owner Controls */}
+      <div className="flex gap-4 text-sm text-gray-600">
+        {data.helmetIncluded && (
+          <span className="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-xs">
+            Helmet Included
+          </span>
+        )}
+
+        {data.fuelIncluded && (
+          <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded-lg text-xs">
+            Fuel Included
+          </span>
+        )}
+      </div>
+
+      {data.notes && (
+        <p className="text-sm text-gray-500 bg-gray-50 p-3 rounded-xl">
+          {data.notes}
+        </p>
+      )}
+
+      {!isOwner && (
+        <>
+          {!showContact && (
+            <button
+              onClick={() => setShowContact(true)}
+              className="mt-2 w-full bg-[#00AFF5] hover:bg-[#0099d6] text-white font-semibold py-2 rounded-xl"
+            >
+              Rent this Scooty
+            </button>
+          )}
+
+          {showContact && (
+            <div className="mt-3 bg-gray-50 rounded-xl p-4 space-y-3">
+              <p className="text-sm text-gray-600">Contact Owner</p>
+
+              <div className="flex gap-3">
+                <a
+                  href={`tel:${data.contact}`}
+                  className="flex-1 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-xl font-semibold"
+                >
+                  <Phone className="w-4 h-4" />
+                  Call
+                </a>
+
+                <a
+                  href={`https://wa.me/${data.contact}?text=${whatsappMessage}`}
+                  target="_blank"
+                  className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white py-2 rounded-xl font-semibold"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  WhatsApp
+                </a>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+
       {isOwner && (
         <div className="flex gap-3 mt-2">
           <button className="flex-1 flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-xl font-semibold">
@@ -96,4 +190,3 @@ export default function ScootyRentCard({ data, onDelete }: Props) {
     </div>
   );
 }
-

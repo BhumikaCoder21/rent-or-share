@@ -93,25 +93,16 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          owner: user?._id,
-
+          ownerId: user?._id,
           ownerName: formData.ownerName,
           contact: formData.contact,
-
           vehicleNumber: formData.vehicleNumber,
-          type: "scooty",
-
-          pickupLocation: formData.location,
-
+          location: formData.location,
           pricePerHour: Number(formData.pricePerHour),
-
-          availability: {
-            fromDate: formData.startDate,
-            toDate: formData.endDate,
-            fromTime: formData.availableFrom,
-            toTime: formData.availableTill,
-          },
-
+          startDate: formData.startDate,
+          endDate: formData.endDate,
+          availableFrom: formData.availableFrom,
+          availableTill: formData.availableTill,
           helmetIncluded: formData.helmetIncluded,
           fuelIncluded: formData.fuelIncluded,
           notes: formData.notes,
@@ -199,7 +190,7 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
 
   return (
     <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl flex flex-col max-h-[90vh]">
-      {/* Header */}
+      
 
       <div className="bg-[#00AFF5] px-6 py-5 flex justify-between items-start">
         <div>
@@ -221,7 +212,7 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
 
       <div className="flex-1 overflow-y-auto p-6">
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Owner */}
+       
 
           <div className="space-y-4">
             <h3 className="font-semibold text-lg flex items-center gap-2">
@@ -255,7 +246,6 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
 
           <hr />
 
-          {/* Scooty */}
 
           <div className="space-y-4">
             <h3 className="font-semibold text-lg flex items-center gap-2">
@@ -299,7 +289,7 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
 
           <hr />
 
-          {/* Availability */}
+        
 
           <div ref={calendarRef} className="space-y-4">
             <h3 className="font-semibold text-lg flex items-center gap-2">
@@ -307,7 +297,7 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
             </h3>
 
             <div className="grid md:grid-cols-2 gap-6">
-              {/* Start Date */}
+            
 
               <div className="relative">
                 <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">
@@ -333,7 +323,7 @@ export default function ScootyRentForm({ onClose }: ScootyRentFormProps) {
                 )}
               </div>
 
-              {/* End Date */}
+         
 
               <div className="relative">
                 <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">

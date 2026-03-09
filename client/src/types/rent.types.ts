@@ -1,33 +1,22 @@
-export interface Availability {
-  fromDate: string;
-  toDate: string;
-  fromTime: string;
-  toTime: string;
-}
-
-export interface Vehicle {
-  _id: string;
-  vehicleNumber: string;
-  type: string;
-  brand?: string;
-  model?: string;
-}
-
 export interface ScootyRent {
   _id: string;
 
-  owner: string;
+  ownerId: string;
 
   ownerName: string;
   contact: string;
 
-  vehicle: Vehicle;
+  vehicleNumber: string;
 
-  pickupLocation: string;
+  location: string;
 
   pricePerHour: number;
 
-  availability: Availability;
+  startDate: string;
+  endDate: string;
+
+  availableFrom: string;
+  availableTill: string;
 
   helmetIncluded: boolean;
   fuelIncluded: boolean;
