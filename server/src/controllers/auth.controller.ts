@@ -27,8 +27,11 @@ export const login = async (req: Request, res: Response) => {
       token,
       user: {
         _id: user._id,
+        name : user.name,
         email: user.email,
-        role: user.role,
+        phoneNumber: user.phoneNumber,
+        rollNumber : user.rollNumber,
+        role: user.role
       },
     });
   } catch (error: any) {

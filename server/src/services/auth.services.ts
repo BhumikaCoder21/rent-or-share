@@ -24,14 +24,11 @@ export const registerUser = async (data: any) => {
 };
 
 export const loginUser = async (email: string, password: string) => {
-  console.log("I am in the login services");
 
   const user = await User.findOne({ email });
   if (!user) {
     throw new Error("Invalid credentials");
   }
-
-  console.log("user present");
 
   if (user.password == null) {
     throw new Error("Password not found");
