@@ -13,8 +13,8 @@ import RideCard from "@/components/main-page/RideCard";
 import ScootyRentCard from "@/components/main-page/ScootyRentCard";
 
 export default function UserCard() {
-  const { rides, loading } = useRides();
-  const { scooties, loading: rentLoading } = useScooty();
+  const { rides = [], loading } = useRides();
+  const { scooties = [], loading: rentLoading } = useScooty();
 
   const [searchData, setSearchData] = useState<{
     from: string;
@@ -34,11 +34,11 @@ export default function UserCard() {
   const filteredRides = searchData
     ? rides.filter((ride) => {
         const matchFrom = ride.from
-          .toLowerCase()
+          ?.toLowerCase()
           .includes(searchData.from.toLowerCase());
 
         const matchTo = ride.to
-          .toLowerCase()
+          ?.toLowerCase()
           .includes(searchData.to.toLowerCase());
 
         const matchDate = searchData.date
@@ -57,6 +57,7 @@ export default function UserCard() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
       <Navbar />
+
       <Hero />
 
       <SearchBar onSearch={handleSearch} />
