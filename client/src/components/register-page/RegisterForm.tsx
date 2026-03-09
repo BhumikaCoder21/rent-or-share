@@ -38,7 +38,7 @@ export default function RegisterForm() {
 
       alert("Registration successful 🎉");
 
-      router.push("/landing-page");
+      router.push("/main-page");
     } catch (error) {
       console.error(error);
       alert("Registration failed");

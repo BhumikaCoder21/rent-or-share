@@ -11,6 +11,7 @@ import { useScooty } from "@/hooks/useRents";
 
 import RideCard from "@/components/main-page/RideCard";
 import ScootyRentCard from "@/components/main-page/ScootyRentCard";
+import Footer from "@/components/landing-page/Footer";
 
 export default function UserCard() {
   const { rides = [], loading } = useRides();
@@ -98,6 +99,8 @@ export default function UserCard() {
           </div>
         )}
       </section>
+      <Footer/>
     </main>
+
   );
 }
