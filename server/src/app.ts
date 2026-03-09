@@ -24,7 +24,7 @@ app.use(
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/vehicle", vehicleRoutes);
+app.use("/api/rent", vehicleRoutes);
 app.use("/api/rides", rideRoute);
 app.use("/api/admin", adminRoute);
 

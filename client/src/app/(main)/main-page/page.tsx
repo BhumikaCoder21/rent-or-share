@@ -7,7 +7,10 @@ import SearchBar from "@/components/landing-page/SearchBar";
 import ActionCards from "@/components/landing-page/ActionCards";
 
 import { useRides } from "@/hooks/useRides";
+import { useScooty } from "@/hooks/useRents";
+
 import RideCard from "@/components/main-page/RideCard";
+import ScootyRentCard from "@/components/main-page/ScootyRentCard";
 
 export default function UserCard() {
   const { rides, loading } = useRides();
@@ -53,6 +56,7 @@ export default function UserCard() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
       <Navbar />
+
       <Hero />
 
       <SearchBar onSearch={handleSearch} />

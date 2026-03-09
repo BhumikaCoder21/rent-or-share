@@ -1,137 +1,190 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import {
+  Trash2,
+  Pencil,
+  User,
+  Bike,
+  Phone,
   MapPin,
+  IndianRupee,
   Calendar,
   Clock,
-  Bike,
-  IndianRupee,
-  Phone,
   MessageCircle,
-  ShieldCheck,
-  Fuel,
 } from "lucide-react";
-import { ScootyRent } from "./scooty-rent-data";
+
+import { ScootyRent } from "@/types/rent.types";
 
 interface Props {
   data: ScootyRent;
+  onDelete?: (id: string) => void;
 }
 
-export default function ScootyRentCard({ data }: Props) {
+export default function ScootyRentCard({ data, onDelete }: Props) {
+  const [loading, setLoading] = useState(false);
   const [showContact, setShowContact] = useState(false);
 
-  const toDate = (d: Date | string) =>
-    new Date(d).toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-    });
+  if (!data) return null;
 
-  const dateRange =
-    data.startDate && data.endDate
-      ? `${toDate(data.startDate)} – ${toDate(data.endDate)}`
-      : "Date not specified";
+  const user =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("user") || "{}")
+      : null;
+
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  const isOwner = user?._id === data.ownerId;
+
+  const formatDate = (d?: string) =>
+    d
+      ? new Date(d).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+      })
+      : "-";
+
+  const handleDelete = async () => {
+    const confirmDelete = confirm("Delete this listing?");
+    if (!confirmDelete) return;
+
+    try {
+      setLoading(true);
+
+      await fetch(`http://localhost:8080/api/rent/${data._id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      onDelete?.(data._id);
+    } catch (error) {
+      console.error("Delete failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const whatsappMessage = encodeURIComponent(
-    `Hi! I want to rent your scooty from ${toDate(
-      data.startDate,
-    )} to ${toDate(data.endDate)} between ${
-      data.availableFrom
-    } and ${data.availableTill} near ${data.location}.`,
+    `Hi ${data.ownerName}, I want to rent your scooty (${data.vehicleNumber}).`
   );
 
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 flex flex-col gap-4">
 
-      <div className="flex items-start gap-3">
-        <MapPin className="text-[#00AFF5] mt-1" />
-        <div>
-          <p className="font-semibold text-lg">{data.location}</p>
-          <p className="text-gray-500 text-sm">Scooty Available</p>
-        </div>
+    
+      <div className="flex items-center gap-2 font-semibold text-lg">
+        <User className="text-[#00AFF5]" />
+        {data.ownerName}
       </div>
 
-      <div className="flex justify-between text-sm text-gray-600">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4" />
-          <span>{dateRange}</span>
-        </div>
+    
+      <div className="flex items-center gap-2 text-gray-700 text-sm">
+        <Bike className="w-4 h-4 text-[#00AFF5]" />
+        {data.vehicleNumber} (Scooty)
+      </div>
 
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4" />
-          <span>
-            {data.availableFrom} – {data.availableTill}
-          </span>
-        </div>
+  
+      <div className="flex items-center gap-2 text-gray-700 text-sm">
+        <MapPin className="w-4 h-4 text-[#00AFF5]" />
+        {data.location}
+      </div>
+
+      <div className="flex items-center gap-2 text-gray-700">
+        <IndianRupee className="w-4 h-4 text-[#00AFF5]" />
+        <span className="font-semibold">₹{data.pricePerHour} / hour</span>
       </div>
 
       <hr />
 
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2 text-gray-700">
-          <Bike className="w-5 h-5 text-[#00AFF5]" />
-          <span className="font-medium">Scooty</span>
+      <div className="flex justify-between text-sm text-gray-600">
+        <div className="flex items-center gap-2">
+          <Calendar className="w-4 h-4" />
+          {formatDate(data.startDate)} → {formatDate(data.endDate)}
         </div>
 
-        <div className="flex items-center gap-1 font-bold text-[#00AFF5]">
-          <IndianRupee className="w-4 h-4" />
-          {data.pricePerHour}/hr
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4" />
+          {data.availableFrom} - {data.availableTill}
         </div>
       </div>
 
-      <div className="flex gap-2 flex-wrap text-xs">
+      <div className="flex gap-4 text-sm text-gray-600">
         {data.helmetIncluded && (
-          <span className="flex items-center gap-1 bg-green-50 text-green-600 px-3 py-1 rounded-full">
-            <ShieldCheck className="w-3 h-3" /> Helmet
+          <span className="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-xs">
+            Helmet Included
           </span>
         )}
+
         {data.fuelIncluded && (
-          <span className="flex items-center gap-1 bg-blue-50 text-blue-600 px-3 py-1 rounded-full">
-            <Fuel className="w-3 h-3" /> Fuel
+          <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded-lg text-xs">
+            Fuel Included
           </span>
         )}
       </div>
 
       {data.notes && (
-        <p className="text-xs text-gray-500 italic">“{data.notes}”</p>
+        <p className="text-sm text-gray-500 bg-gray-50 p-3 rounded-xl">
+          {data.notes}
+        </p>
       )}
 
-      {!showContact && (
-        <button
-          onClick={() => setShowContact(true)}
-          className="mt-2 w-full bg-[#00AFF5] hover:bg-[#0099d6] text-white font-semibold py-2 rounded-xl"
-        >
-          Rent this Scooty
-        </button>
+      {!isOwner && (
+        <>
+          {!showContact && (
+            <button
+              onClick={() => setShowContact(true)}
+              className="mt-2 w-full bg-[#00AFF5] hover:bg-[#0099d6] text-white font-semibold py-2 rounded-xl"
+            >
+              Rent this Scooty
+            </button>
+          )}
+
+          {showContact && (
+            <div className="mt-3 bg-gray-50 rounded-xl p-4 space-y-3">
+              <p className="text-sm text-gray-600">Contact Owner</p>
+
+              <div className="flex gap-3">
+                <a
+                  href={`tel:${data.contact}`}
+                  className="flex-1 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-xl font-semibold"
+                >
+                  <Phone className="w-4 h-4" />
+                  Call
+                </a>
+
+                <a
+                  href={`https://wa.me/${data.contact}?text=${whatsappMessage}`}
+                  target="_blank"
+                  className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white py-2 rounded-xl font-semibold"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  WhatsApp
+                </a>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
-      {showContact && (
-        <div className="mt-3 bg-gray-50 rounded-xl p-4 space-y-3">
-          <p className="text-sm text-gray-600">Contact Owner</p>
 
-          <p className="font-semibold text-lg">{data.ownerName}</p>
-          <p className="text-sm text-gray-500">{data.contact}</p>
+      {isOwner && (
+        <div className="flex gap-3 mt-2">
+          <button className="flex-1 flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-xl font-semibold">
+            <Pencil className="w-4 h-4" />
+            Update
+          </button>
 
-          <div className="flex gap-3">
-            <Link
-              href={`tel:${data.contact}`}
-              className="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2 rounded-xl font-semibold"
-            >
-              <Phone className="w-4 h-4" />
-              Call
-            </Link>
-
-            <Link
-              href={`https://wa.me/91${data.contact}?text=${whatsappMessage}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white py-2 rounded-xl font-semibold"
-            >
-              <MessageCircle className="w-4 h-4" />
-              WhatsApp
-            </Link>
-          </div>
+          <button
+            onClick={handleDelete}
+            disabled={loading}
+            className="flex-1 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl font-semibold"
+          >
+            <Trash2 className="w-4 h-4" />
+            {loading ? "Deleting..." : "Delete"}
+          </button>
         </div>
       )}
     </div>
