@@ -11,9 +11,11 @@ import { useScooty } from "@/hooks/useRents";
 
 import RideCard from "@/components/main-page/RideCard";
 import ScootyRentCard from "@/components/main-page/ScootyRentCard";
+import Footer from "@/components/landing-page/Footer";
 
 export default function UserCard() {
-  const { rides, loading } = useRides();
+const { rides = [], loading } = useRides();
+const { scooties = [], loading: rentLoading } = useScooty();
 
   const [searchData, setSearchData] = useState<{
     from: string;
@@ -30,24 +32,24 @@ export default function UserCard() {
     console.log("Search Data:", data);
   };
 
-  const filteredRides = searchData
-    ? rides.filter((ride) => {
-        const matchFrom = ride.from
-          .toLowerCase()
-          .includes(searchData.from.toLowerCase());
+const filteredRides = searchData
+  ? rides.filter((ride) => {
+      const matchFrom = ride.from
+        .toLowerCase()
+        .includes(searchData.from.toLowerCase());
 
-        const matchTo = ride.to
-          .toLowerCase()
-          .includes(searchData.to.toLowerCase());
+      const matchTo = ride.to
+        .toLowerCase()
+        .includes(searchData.to.toLowerCase());
 
-        const matchDate = searchData.date
-          ? new Date(ride.date).toDateString() ===
-            new Date(searchData.date).toDateString()
-          : true;
+      const matchDate = searchData.date
+        ? new Date(ride.date).toISOString().split("T")[0] ===
+          searchData.date.toISOString().split("T")[0]
+        : true;
 
-        return matchFrom && matchTo && matchDate;
-      })
-    : rides;
+      return matchFrom && matchTo && matchDate;
+    })
+  : rides;
 
   if (loading) {
     return <p className="p-6">Loading rides...</p>;
@@ -63,11 +65,42 @@ export default function UserCard() {
 
       <ActionCards />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        {filteredRides.map((ride) => (
-          <RideCard key={ride._id} ride={ride} />
-        ))}
-      </div>
+   
+      <section className="px-6 py-10">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">
+          Available Rides
+        </h2>
+
+        {filteredRides.length === 0 ? (
+          <p className="text-gray-500">No rides available.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredRides.map((ride) => (
+              <RideCard key={ride._id} ride={ride} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="px-6 py-10">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">
+          Available Rents
+        </h2>
+
+        {rentLoading ? (
+          <p className="text-gray-500">Loading scooties...</p>
+        ) : scooties.length === 0 ? (
+          <p className="text-gray-500">No scooties available for rent.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {scooties.map((scooty) => (
+              <ScootyRentCard key={scooty._id} data={scooty} />
+            ))}
+          </div>
+        )}
+      </section>
+      <Footer/>
     </main>
+
   );
 }

@@ -103,8 +103,8 @@ export default function CalendarPopup({
       </div>
 
       <div className="grid grid-cols-7 mb-2 text-center text-xs font-semibold text-gray-500 uppercase">
-        {["S", "M", "T", "W", "T", "F", "S"].map((d) => (
-          <span key={d}>{d}</span>
+        {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
+          <span key={`${d}-${i}`}>{d}</span>
         ))}
       </div>
 

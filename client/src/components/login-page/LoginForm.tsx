@@ -4,6 +4,7 @@ import { User, Mail, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { LoginRequest } from "@/types/auth.types";
 import { useAuth } from "@/hooks/useAuth"
+import {useToggle} from "@/hooks/useProfile"
 
 
 import {
@@ -21,6 +22,7 @@ import { useRouter } from "next/navigation";
 
 
 export default function LoginForm() {
+  const { setIsOpen } = useToggle();
   const router = useRouter();
   const { login, loginLoading } = useAuth();
 
@@ -43,8 +45,8 @@ export default function LoginForm() {
      localStorage.setItem("user", JSON.stringify(res.user));
 
      alert("Login successful 🎉");
-
-     router.push("/landing-page");
+     setIsOpen(true);
+     router.push("/main-page");
    } catch (error) {
      console.error(error);
      alert("Login failed");
