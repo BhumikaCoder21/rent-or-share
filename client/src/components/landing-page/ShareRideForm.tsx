@@ -73,8 +73,8 @@ export default function ShareRideForm({ onClose, rideId }: ShareRideFormProps) {
     try {
       const res = await fetch(
         rideId
-          ? `http://localhost:8080/api/rides/${rideId}`
-          : "http://localhost:8080/api/rides",
+          ? `${process.env.NEXT_PUBLIC_API_URL}/api/rides/${rideId}`
+          : `${process.env.NEXT_PUBLIC_API_URL}/api/rides`,
         {
           method: rideId ? "PUT" : "POST",
           headers: {

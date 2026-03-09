@@ -2,7 +2,7 @@ import API from "./axios";
 import { ScootyRent } from "@/types/rent.types";
 
 export const getAllScooties = async () => {
-  const res = await fetch("http://localhost:8080/api/rent");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/rent`);
 
   const data = await res.json();
 

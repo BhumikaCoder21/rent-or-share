@@ -52,7 +52,7 @@ export default function ScootyRentCard({ data, onDelete }: Props) {
     try {
       setLoading(true);
 
-      await fetch(`http://localhost:8080/api/rent/${data._id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/rent/${data._id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
