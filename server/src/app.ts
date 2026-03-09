@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "https://rent-and-share.vercel.app/",
+    origin: "https://rent-and-share.vercel.app",
     credentials: true,
   }),
 );
