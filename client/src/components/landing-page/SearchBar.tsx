@@ -54,7 +54,7 @@ export default function SearchBar({ onSearch }: SearchProps) {
         onSubmit={handleSearch}
         className="flex flex-col md:flex-row bg-white rounded-2xl md:rounded-full shadow-lg border border-gray-100 overflow-visible"
       >
-       
+        {/* FROM */}
         <div className="flex-1 px-4 py-3">
           <div className="flex items-center gap-3">
             <Circle className="w-5 h-5 text-gray-400 shrink-0" />

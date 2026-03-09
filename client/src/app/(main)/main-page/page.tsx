@@ -14,8 +14,7 @@ import ScootyRentCard from "@/components/main-page/ScootyRentCard";
 import Footer from "@/components/landing-page/Footer";
 
 export default function UserCard() {
-  const { rides = [], loading } = useRides();
-  const { scooties = [], loading: rentLoading } = useScooty();
+  const { rides, loading } = useRides();
 
   const [searchData, setSearchData] = useState<{
     from: string;
@@ -35,11 +34,11 @@ export default function UserCard() {
   const filteredRides = searchData
     ? rides.filter((ride) => {
         const matchFrom = ride.from
-          ?.toLowerCase()
+          .toLowerCase()
           .includes(searchData.from.toLowerCase());
 
         const matchTo = ride.to
-          ?.toLowerCase()
+          .toLowerCase()
           .includes(searchData.to.toLowerCase());
 
         const matchDate = searchData.date
