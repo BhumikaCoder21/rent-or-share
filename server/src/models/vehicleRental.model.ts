@@ -19,6 +19,12 @@ const vehicleRentalSchema = new mongoose.Schema(
       required: true,
     },
 
+    vehicleNumber: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
     location: {
       type: String,
       required: true,
@@ -71,7 +77,8 @@ const vehicleRentalSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export default mongoose.model("VehicleRental", vehicleRentalSchema);
+

@@ -1,50 +1,51 @@
-import Vehicle from "../models/vehicle.model";
+import VehicleRental from "../models/vehicleRental.model";
 
 export const registerVehicleService = async (data: any) => {
-  const vehicle = await Vehicle.create(data);
-  return vehicle;
+  const rental = await VehicleRental.create(data);
+  return rental;
 };
 
 export const getAllVehiclesService = async () => {
-  const vehicles = await Vehicle.find().populate("owner", "name phone"); // fetch owner details
+  const rentals = await VehicleRental.find();
 
-  if (!vehicles || vehicles.length === 0) {
-    throw new Error("No vehicles found");
+  if (!rentals || rentals.length === 0) {
+    throw new Error("No rentals found");
   }
 
-  return vehicles;
+  return rentals;
 };
 
 export const getVehicleByIdService = async (id: string) => {
-  const vehicle = await Vehicle.findById(id).populate("owner", "name phone"); // fetch owner details
+  const rental = await VehicleRental.findById(id);
 
-  if (!vehicle) {
-    throw new Error("Vehicle not found");
+  if (!rental) {
+    throw new Error("Rental not found");
   }
 
-  return vehicle;
+  return rental;
 };
 
 export const updateVehicleService = async (id: string, data: any) => {
-  const updatedVehicle = await Vehicle.findByIdAndUpdate(
+  const updatedRental = await VehicleRental.findByIdAndUpdate(
     id,
     { $set: data },
-    { new: true, runValidators: true },
+    { new: true, runValidators: true }
   );
 
-  if (!updatedVehicle) {
-    throw new Error("Vehicle not found");
+  if (!updatedRental) {
+    throw new Error("Rental not found");
   }
 
-  return updatedVehicle;
+  return updatedRental;
 };
 
 export const deleteVehicleService = async (id: string) => {
-  const deletedVehicle = await Vehicle.findByIdAndDelete(id);
+  const deletedRental = await VehicleRental.findByIdAndDelete(id);
 
-  if (!deletedVehicle) {
-    throw new Error("Vehicle not found");
+  if (!deletedRental) {
+    throw new Error("Rental not found");
   }
 
-  return deletedVehicle;
+  return deletedRental;
 };
+
