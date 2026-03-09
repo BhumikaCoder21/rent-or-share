@@ -14,7 +14,8 @@ import ScootyRentCard from "@/components/main-page/ScootyRentCard";
 import Footer from "@/components/landing-page/Footer";
 
 export default function UserCard() {
-  const { rides, loading } = useRides();
+const { rides = [], loading } = useRides();
+const { scooties = [], loading: rentLoading } = useScooty();
 
   const [searchData, setSearchData] = useState<{
     from: string;
@@ -31,24 +32,24 @@ export default function UserCard() {
     console.log("Search Data:", data);
   };
 
-  const filteredRides = searchData
-    ? rides.filter((ride) => {
-        const matchFrom = ride.from
-          .toLowerCase()
-          .includes(searchData.from.toLowerCase());
+const filteredRides = searchData
+  ? rides.filter((ride) => {
+      const matchFrom = ride.from
+        .toLowerCase()
+        .includes(searchData.from.toLowerCase());
 
-        const matchTo = ride.to
-          .toLowerCase()
-          .includes(searchData.to.toLowerCase());
+      const matchTo = ride.to
+        .toLowerCase()
+        .includes(searchData.to.toLowerCase());
 
-        const matchDate = searchData.date
-          ? new Date(ride.date).toDateString() ===
-            new Date(searchData.date).toDateString()
-          : true;
+      const matchDate = searchData.date
+        ? new Date(ride.date).toISOString().split("T")[0] ===
+          searchData.date.toISOString().split("T")[0]
+        : true;
 
-        return matchFrom && matchTo && matchDate;
-      })
-    : rides;
+      return matchFrom && matchTo && matchDate;
+    })
+  : rides;
 
   if (loading) {
     return <p className="p-6">Loading rides...</p>;
