@@ -7,7 +7,15 @@ The goal of this project is to **reduce travel costs, make commuting easier, and
 
 ---
 
-# ✨ Features
+## 📸 Screenshots
+
+![Ride 1](ride1.png)
+![Ride 2](ride2.png)
+![Ride 3](ride3.png)
+
+---
+
+## ✨ Features
 
 🔐 **College Email Login**
 Only users with valid college email IDs can access the platform.
@@ -31,7 +39,7 @@ Clean and user-friendly interface for easy navigation.
 
 ---
 
-# 🛠️ Tech Stack
+## 🛠️ Tech Stack
 
 ### Frontend
 
@@ -54,49 +62,51 @@ Clean and user-friendly interface for easy navigation.
 * Git
 * GitHub
 
-# 🚀 Getting Started
+---
 
-## 1️⃣ Clone the Repository
+## 🚀 Getting Started
 
-```
+### 1️⃣ Clone the Repository
+
+```bash
 git clone https://github.com/yourusername/rent-or-share.git
 ```
 
-## 2️⃣ Navigate to the Project Folder
+### 2️⃣ Navigate to the Project Folder
 
-```
+```bash
 cd rent-or-share
 ```
 
-## 3️⃣ Install Dependencies
+### 3️⃣ Install Dependencies
 
-### Client
+#### Client
 
-```
+```bash
 cd client
 npm install
 ```
 
-### Server
+#### Server
 
-```
+```bash
 cd ../server
 npm install
 ```
 
 ---
 
-## 4️⃣ Run the Project
+### 4️⃣ Run the Project
 
-Start backend server
+Start backend server:
 
-```
+```bash
 npm start
 ```
 
-Start frontend
+Start frontend:
 
-```
+```bash
 cd client
 npm start
 ```
@@ -109,7 +119,7 @@ http://localhost:3000
 
 ---
 
-# 🎯 Future Improvements
+## 🎯 Future Improvements
 
 * Google Maps route integration
 * Seat availability tracking
@@ -120,7 +130,7 @@ http://localhost:3000
 
 ---
 
-# 🤝 Contributing
+## 🤝 Contributing
 
 Contributions are welcome!
 
@@ -131,13 +141,13 @@ Contributions are welcome!
 
 ---
 
-# 📄 License
+## 📄 License
 
 This project is created for **educational and learning purposes**.
 
 ---
 
-# 👩‍💻 Author
+## 👩‍💻 Author
 
 **Bhumika Gupta**
 
