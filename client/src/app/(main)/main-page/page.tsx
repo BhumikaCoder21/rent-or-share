@@ -14,8 +14,8 @@ import ScootyRentCard from "@/components/main-page/ScootyRentCard";
 import Footer from "@/components/landing-page/Footer";
 
 export default function UserCard() {
-const { rides = [], loading } = useRides();
-const { scooties = [], loading: rentLoading } = useScooty();
+  const { rides = [], loading } = useRides();
+  const { scooties = [], loading: rentLoading } = useScooty();
 
   const [searchData, setSearchData] = useState<{
     from: string;
@@ -32,28 +32,24 @@ const { scooties = [], loading: rentLoading } = useScooty();
     console.log("Search Data:", data);
   };
 
-const filteredRides = searchData
-  ? rides.filter((ride) => {
-      const matchFrom = ride.from
-        .toLowerCase()
-        .includes(searchData.from.toLowerCase());
+  const filteredRides = searchData
+    ? rides.filter((ride) => {
+        const matchFrom = ride.from
+          .toLowerCase()
+          .includes(searchData.from.toLowerCase());
 
-      const matchTo = ride.to
-        .toLowerCase()
-        .includes(searchData.to.toLowerCase());
+        const matchTo = ride.to
+          .toLowerCase()
+          .includes(searchData.to.toLowerCase());
 
-      const matchDate = searchData.date
-        ? new Date(ride.date).toISOString().split("T")[0] ===
-          searchData.date.toISOString().split("T")[0]
-        : true;
+        const matchDate = searchData.date
+          ? new Date(ride.date).toISOString().split("T")[0] ===
+            searchData.date.toISOString().split("T")[0]
+          : true;
 
-      return matchFrom && matchTo && matchDate;
-    })
-  : rides;
-
-  if (loading) {
-    return <p className="p-6">Loading rides...</p>;
-  }
+        return matchFrom && matchTo && matchDate;
+      })
+    : rides;
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
@@ -65,13 +61,14 @@ const filteredRides = searchData
 
       <ActionCards />
 
-   
       <section className="px-6 py-10">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">
           Available Rides
         </h2>
 
-        {filteredRides.length === 0 ? (
+        {loading ? (
+          <p>Loading....</p>
+        ) : filteredRides.length === 0 ? (
           <p className="text-gray-500">No rides available.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -87,7 +84,9 @@ const filteredRides = searchData
           Available Rents
         </h2>
 
-        {rentLoading ? (
+        {loading ? (
+          <p>Loading....</p>
+        ) : rentLoading ? (
           <p className="text-gray-500">Loading scooties...</p>
         ) : scooties.length === 0 ? (
           <p className="text-gray-500">No scooties available for rent.</p>
@@ -99,8 +98,7 @@ const filteredRides = searchData
           </div>
         )}
       </section>
-      <Footer/>
+      <Footer />
     </main>
-
   );
 }
